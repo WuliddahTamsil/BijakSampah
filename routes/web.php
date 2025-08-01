@@ -155,3 +155,16 @@ Route::get('/profile-nasabah', function () {
 Route::get('/penjemputan-sampah-banksampah', function () {
     return view('penjemputan-sampah-banksampah');
 })->name('penjemputan-sampah-banksampah');
+
+// Admin Panel Routes
+Route::get('/admin/orders', function () {
+    return view('admin.orders');
+})->name('orders');
+
+Route::get('/admin/customers', function () {
+    return view('admin.customers');
+})->name('customers');
+
+Route::get('/admin/analytics', function () {
+    return view('admin.analytics');
+})->name('analytics');
