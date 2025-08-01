@@ -331,7 +331,7 @@
                         <button @click="setActiveTab('dashboard')" 
                                 :class="activeTab === 'dashboard' ? 'border-teal-500 text-teal-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                                 class="py-2 px-1 border-b-2 font-medium text-sm transition-colors">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                            <i class="fas fa-home mr-2"></i>Beranda
                         </button>
                         <button @click="setActiveTab('products')" 
                                 :class="activeTab === 'products' ? 'border-teal-500 text-teal-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
@@ -358,146 +358,189 @@
 
                 <!-- Dashboard Tab -->
                 <div x-show="activeTab === 'dashboard'" class="space-y-6">
-                    <!-- Welcome Banner -->
-                    <div class="bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 rounded-2xl p-8 text-white">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h1 class="text-4xl font-bold mb-2">Selamat Datang di Admin Panel</h1>
-                                <p class="text-teal-100 text-lg">Kelola toko daur ulang Anda dengan mudah dan efisien</p>
-                                <div class="flex gap-4 mt-4">
-                                    <button @click="showAddProduct = true" class="bg-white text-teal-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                                        <i class="fas fa-plus mr-2"></i>Tambah Produk
+                    <!-- Product Detail Section -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- Product Image -->
+                            <div class="space-y-4">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80" 
+                                         alt="Tas Nusantara" 
+                                         class="w-full h-80 object-cover rounded-lg shadow-md">
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">Tag</span>
+                                    </div>
+                                </div>
+                                <button class="text-teal-600 hover:text-teal-700 text-sm font-medium">
+                                    <i class="fas fa-camera mr-2"></i>Perbarui Foto Produk?
+                                </button>
+                            </div>
+                            
+                            <!-- Product Details -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Produk</label>
+                                    <input type="text" value="Tas Nusantara" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Harga Produk</label>
+                                    <input type="text" value="Rp20.000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Produk</label>
+                                    <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none">Tas Nusantara Bagus dan Murah....</textarea>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Penjualan/Stok</label>
+                                        <input type="text" value="20 dijual dari 90 Stok" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Produk</label>
+                                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                            <option>Produk Pakai</option>
+                                            <option>Produk Hias</option>
+                                            <option>Produk Kerajinan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <button class="flex-1 bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors font-semibold">
+                                        <i class="fas fa-save mr-2"></i>Simpan Perubahan
                                     </button>
-                                    <button @click="setActiveTab('analytics')" class="bg-teal-400 text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-500 transition-colors">
-                                        <i class="fas fa-chart-bar mr-2"></i>Lihat Statistik
+                                    <button class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
+                                        <i class="fas fa-times mr-2"></i>Batal
                                     </button>
                                 </div>
-                            </div>
-                            <div class="hidden lg:block">
-                                <i class="fas fa-store text-8xl text-teal-200"></i>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Statistics Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="ecommerce-card p-6">
+                    <!-- Produk BS Section -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2">Produk BS</h2>
+                            <p class="text-gray-600">Daur ulang jadi peluang, ciptakan produk bernilai dan lingkungan yang lestari.</p>
+                        </div>
+                        
+                        <!-- Category Filters -->
+                        <div class="flex flex-wrap gap-3 mb-6">
+                            <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                Hiasan Rumah
+                            </button>
+                            <button class="px-4 py-2 rounded-lg bg-green-500 text-white border border-green-500 transition-colors">
+                                Aksesoris
+                            </button>
+                            <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                Hiasan Rumah
+                            </button>
+                            <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                Lainnya
+                            </button>
+                        </div>
+                        
+                        <!-- Products Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Product Card 1 -->
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80" 
+                                         alt="Tas Kreasi" 
+                                         class="w-full h-48 object-cover">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-sm text-gray-500">@Wugis</span>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Tas Kreasi</h3>
+                                    <p class="text-teal-600 font-bold mb-3">Harga Rp20.000</p>
+                                    <button class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors text-sm font-medium">
+                                        Selengkapnya
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Product Card 2 -->
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=400&q=80" 
+                                         alt="Tas Kreasi" 
+                                         class="w-full h-48 object-cover">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-sm text-gray-500">@Wugis</span>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Tas Kreasi</h3>
+                                    <p class="text-teal-600 font-bold mb-3">Harga Rp20.000</p>
+                                    <button class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors text-sm font-medium">
+                                        Selengkapnya
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Product Card 3 -->
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=400&q=80" 
+                                         alt="Tas Kreasi" 
+                                         class="w-full h-48 object-cover">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-sm text-gray-500">@Wugis</span>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 mb-2">Tas Kreasi</h3>
+                                    <p class="text-teal-600 font-bold mb-3">Harga Rp20.000</p>
+                                    <button class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors text-sm font-medium">
+                                        Selengkapnya
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                                        <!-- Additional Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg shadow-md p-6">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-gray-600 text-sm font-medium">Total Produk</p>
-                                    <p class="text-3xl font-bold text-gray-900" x-text="totalProducts"></p>
-                                    <p class="text-green-600 text-sm">+12% dari bulan lalu</p>
+                                    <p class="text-2xl font-bold text-gray-900">247</p>
                                 </div>
-                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-box text-blue-600 text-xl"></i>
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-box text-blue-600"></i>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="ecommerce-card p-6">
+                        <div class="bg-white rounded-lg shadow-md p-6">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-gray-600 text-sm font-medium">Pesanan Masuk</p>
-                                    <p class="text-3xl font-bold text-gray-900" x-text="totalOrders"></p>
-                                    <p class="text-orange-600 text-sm">+5 pesanan baru</p>
+                                    <p class="text-gray-600 text-sm font-medium">Pesanan Hari Ini</p>
+                                    <p class="text-2xl font-bold text-gray-900">12</p>
                                 </div>
-                                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-shopping-cart text-orange-600 text-xl"></i>
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-shopping-cart text-green-600"></i>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="ecommerce-card p-6">
+                        <div class="bg-white rounded-lg shadow-md p-6">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-gray-600 text-sm font-medium">Pendapatan</p>
-                                    <p class="text-3xl font-bold text-gray-900" x-text="formatPrice(totalRevenue)"></p>
-                                    <p class="text-green-600 text-sm">+8% dari bulan lalu</p>
+                                    <p class="text-2xl font-bold text-gray-900">Rp2.5M</p>
                                 </div>
-                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="ecommerce-card p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-gray-600 text-sm font-medium">Rating</p>
-                                    <p class="text-3xl font-bold text-gray-900" x-text="averageRating"></p>
-                                    <p class="text-yellow-600 text-sm">★★★★★</p>
-                                </div>
-                                <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-star text-yellow-600 text-xl"></i>
+                                <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-dollar-sign text-teal-600"></i>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Recent Activity & Quick Actions -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Recent Orders -->
-                        <div class="ecommerce-card p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-4">Pesanan Terbaru</h3>
-                            <div class="space-y-4">
-                                <template x-for="order in orders.slice(0, 3)" :key="order.id">
-                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
-                                                <i class="fas fa-box text-teal-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium text-gray-900" x-text="order.products[0]"></p>
-                                                <p class="text-sm text-gray-600" x-text="order.id"></p>
-                                            </div>
-                                        </div>
-                                        <span class="status-badge" :class="getStatusColor(order.status)" x-text="order.status"></span>
-                                    </div>
-                                </template>
-                            </div>
-                            <button @click="setActiveTab('orders')" class="w-full mt-4 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors">
-                                Lihat Semua Pesanan
-                            </button>
-                        </div>
-
-                                            <!-- Quick Actions -->
-                    <div class="ecommerce-card p-6">
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">Aksi Cepat</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button @click="showAddProduct = true" class="p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                                <i class="fas fa-plus text-blue-600 text-2xl mb-2"></i>
-                                <p class="font-semibold text-gray-900">Tambah Produk</p>
-                            </button>
-                            <button @click="setActiveTab('products')" class="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                                <i class="fas fa-boxes text-green-600 text-2xl mb-2"></i>
-                                <p class="font-semibold text-gray-900">Kelola Produk</p>
-                            </button>
-                            <button @click="setActiveTab('orders')" class="p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                                <i class="fas fa-shopping-cart text-purple-600 text-2xl mb-2"></i>
-                                <p class="font-semibold text-gray-900">Pesanan</p>
-                            </button>
-                            <button @click="setActiveTab('analytics')" class="p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-                                <i class="fas fa-chart-line text-orange-600 text-2xl mb-2"></i>
-                                <p class="font-semibold text-gray-900">Analitik</p>
-                            </button>
-                        </div>
-                        
-                        <!-- Export & Report Buttons -->
-                        <div class="mt-6 pt-4 border-t border-gray-200">
-                            <h4 class="text-sm font-semibold text-gray-700 mb-3">Laporan & Export</h4>
-                            <div class="flex gap-2">
-                                <button @click="exportData('produk')" class="flex-1 bg-teal-600 text-white py-2 px-3 rounded-lg hover:bg-teal-700 transition-colors text-sm">
-                                    <i class="fas fa-download mr-1"></i>Export Produk
-                                </button>
-                                <button @click="exportData('pesanan')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors text-sm">
-                                    <i class="fas fa-download mr-1"></i>Export Pesanan
-                                </button>
-                                <button @click="generateReport()" class="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg hover:bg-green-700 transition-colors text-sm">
-                                    <i class="fas fa-file-alt mr-1"></i>Buat Laporan
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                     </div>
                 </div>
 
