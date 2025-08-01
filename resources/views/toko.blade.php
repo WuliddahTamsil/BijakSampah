@@ -11,32 +11,174 @@
     <script src="{{ asset('asset/js/theme-manager.js') }}"></script>
     <script src="{{ asset('asset/js/update-themes.js') }}"></script>
     <style>
-        html, body { overflow-x: hidden; }
-        .sidebar-gradient { background: var(--sidebar-gradient); }
-        .sidebar-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .sidebar-item-hover { transition: all 0.2s ease-in-out; }
-        .sidebar-item-hover:hover { background-color: rgba(255, 255, 255, 0.2); }
-        .sidebar-logo { transition: all 0.3s ease-in-out; }
-        .sidebar-nav-item { transition: all 0.2s ease-in-out; border-radius: 8px; }
-        .sidebar-nav-item:hover { background-color: rgba(255, 255, 255, 0.1); }
-        .sidebar-nav-item.active { background-color: rgba(255, 255, 255, 0.2); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        .fixed-header { position: fixed; top: 0; left: 0; right: 0; height: 48px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding-right: 1.5rem; background: var(--sidebar-gradient) !important; transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .ecommerce-card { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .notification-badge { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; z-index: 10; }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
+        html, body { 
+            overflow-x: hidden; 
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        .sidebar-gradient { 
+            background: linear-gradient(135deg, #75E6DA 0%, #05445E 63%);
+        }
+        .sidebar-hover { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .sidebar-item-hover { 
+            transition: all 0.2s ease-in-out; 
+        }
+        .sidebar-item-hover:hover { 
+            background-color: rgba(255, 255, 255, 0.2); 
+        }
+        .sidebar-logo { 
+            transition: all 0.3s ease-in-out; 
+        }
+        .sidebar-nav-item { 
+            transition: all 0.2s ease-in-out; 
+            border-radius: 8px; 
+        }
+        .sidebar-nav-item:hover { 
+            background-color: rgba(255, 255, 255, 0.1); 
+        }
+        .sidebar-nav-item.active { 
+            background-color: rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+        .fixed-header { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            height: 48px; 
+            z-index: 40; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 1.5rem; 
+            background: linear-gradient(135deg, #75E6DA 0%, #05445E 63%);
+            transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .main-content-wrapper {
+            min-height: 100vh;
+            background: #f9fafb;
+            padding-top: 60px; 
+            padding-left: 4rem; 
+            padding-right: 0;
+            transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; 
+            overflow-x: hidden;
+            width: 100%;
+            scroll-behavior: smooth;
+            z-index: 1;
+        }
+        .content-container { 
+            width: 100%; 
+            margin: 0; 
+            padding: 2rem; 
+            position: relative; 
+            z-index: 1; 
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        .sidebar-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); 
+            z-index: 40; 
+            opacity: 0; 
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .sidebar-overlay.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+        
+        /* Ensure sidebar overlays content */
+        aside {
+            z-index: 50 !important;
+        }
+        
+        .ecommerce-card { 
+            background: white; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+            border: 1px solid #e5e7eb; 
+            transition: all 0.3s ease;
+        }
+        .ecommerce-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .status-badge { 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 600; 
+        }
+        .notification-badge { 
+            position: absolute; 
+            top: -5px; 
+            right: -5px; 
+            background: #ef4444; 
+            color: white; 
+            border-radius: 50%; 
+            width: 18px; 
+            height: 18px; 
+            font-size: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 10; 
+        }
+        .modal-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0, 0, 0, 0.5); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000; 
+        }
+        .modal-content { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 24px; 
+            max-width: 500px; 
+            width: 90%; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            position: relative; 
+        }
+        
+        /* Responsive fixes */
+        @media (max-width: 1024px) {
+            .main-content-wrapper { padding-left: 1rem; padding-right: 1rem; }
+            .content-container { padding: 1.5rem; }
+        }
+        @media (max-width: 768px) {
+            .main-content-wrapper { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .content-container { padding: 1rem; }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="tokoApp()" x-init="init()">
-        <!-- Sidebar -->
+    <div class="flex min-h-screen bg-gray-50" x-data="tokoApp()" x-init="init()">
+        {{-- Sidebar Overlay --}}
+        <div class="sidebar-overlay" :class="{ 'active': sidebarOpen }" @click="sidebarOpen = false"></div>
+
+        {{-- Sidebar --}}
         <aside
             x-data="{ open: false, active: 'toko' }"
             x-ref="sidebar"
             @mouseenter="open = true; $root.sidebarOpen = true"
             @mouseleave="open = false; $root.sidebarOpen = false"
-            class="fixed top-0 left-0 z-20 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
+            class="fixed top-0 left-0 z-50 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
             :class="open ? 'w-64' : 'w-16'"
             style="transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 48px; height: calc(100vh - 48px);"
         >
@@ -110,13 +252,29 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <div class="flex-1" :style="'padding-left: ' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);'">
-            <!-- Top Header -->
-            <header class="fixed top-0 left-0 right-0 h-12 z-40 flex items-center justify-between px-6 fixed-header" :style="'padding-left: ' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);'">
+        {{-- Main Content Area --}}
+        <div class="main-content-wrapper" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
+            {{-- Top Header Bar --}}
+            <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
                 <div class="flex items-center gap-4">
                     <h1 class="text-white font-bold text-xl">Toko Daur Ulang</h1>
                     <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm">E-Commerce Admin</span>
+                    
+                    <!-- Real-time Stats -->
+                    <div class="hidden md:flex items-center gap-4 text-white text-sm">
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-users text-teal-200"></i>
+                            <span x-text="realTimeData.onlineUsers"></span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-shopping-cart text-teal-200"></i>
+                            <span x-text="realTimeData.currentOrders"></span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-dollar-sign text-teal-200"></i>
+                            <span x-text="formatPrice(realTimeData.revenueToday)"></span>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex items-center gap-4">
                     <button @click="showNotifications = true" class="relative text-white hover:text-gray-200 transition-colors">
@@ -142,8 +300,8 @@
                 </div>
             </header>
 
-            <!-- Main Content Area -->
-            <main class="pt-16 px-6 pb-6" style="background-color: var(--bg-primary);">
+            {{-- Main Content --}}
+            <div class="content-container">
                 <!-- Navigation Tabs -->
                 <div class="mb-8">
                     <nav class="flex space-x-8 border-b border-gray-200">
@@ -279,28 +437,44 @@
                             </button>
                         </div>
 
-                        <!-- Quick Actions -->
-                        <div class="ecommerce-card p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-4">Aksi Cepat</h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <button @click="showAddProduct = true" class="p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                                    <i class="fas fa-plus text-blue-600 text-2xl mb-2"></i>
-                                    <p class="font-semibold text-gray-900">Tambah Produk</p>
+                                            <!-- Quick Actions -->
+                    <div class="ecommerce-card p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Aksi Cepat</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button @click="showAddProduct = true" class="p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                                <i class="fas fa-plus text-blue-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-gray-900">Tambah Produk</p>
+                            </button>
+                            <button @click="setActiveTab('products')" class="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                                <i class="fas fa-boxes text-green-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-gray-900">Kelola Produk</p>
+                            </button>
+                            <button @click="setActiveTab('orders')" class="p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                                <i class="fas fa-shopping-cart text-purple-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-gray-900">Pesanan</p>
+                            </button>
+                            <button @click="setActiveTab('analytics')" class="p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                                <i class="fas fa-chart-line text-orange-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-gray-900">Analitik</p>
+                            </button>
+                        </div>
+                        
+                        <!-- Export & Report Buttons -->
+                        <div class="mt-6 pt-4 border-t border-gray-200">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-3">Laporan & Export</h4>
+                            <div class="flex gap-2">
+                                <button @click="exportData('produk')" class="flex-1 bg-teal-600 text-white py-2 px-3 rounded-lg hover:bg-teal-700 transition-colors text-sm">
+                                    <i class="fas fa-download mr-1"></i>Export Produk
                                 </button>
-                                <button @click="setActiveTab('products')" class="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                                    <i class="fas fa-boxes text-green-600 text-2xl mb-2"></i>
-                                    <p class="font-semibold text-gray-900">Kelola Produk</p>
+                                <button @click="exportData('pesanan')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                    <i class="fas fa-download mr-1"></i>Export Pesanan
                                 </button>
-                                <button @click="setActiveTab('orders')" class="p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                                    <i class="fas fa-shopping-cart text-purple-600 text-2xl mb-2"></i>
-                                    <p class="font-semibold text-gray-900">Pesanan</p>
-                                </button>
-                                <button @click="setActiveTab('analytics')" class="p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-                                    <i class="fas fa-chart-line text-orange-600 text-2xl mb-2"></i>
-                                    <p class="font-semibold text-gray-900">Analitik</p>
+                                <button @click="generateReport()" class="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                    <i class="fas fa-file-alt mr-1"></i>Buat Laporan
                                 </button>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
 
@@ -527,7 +701,7 @@
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
 
@@ -825,8 +999,8 @@
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors">
                 </div>
                 <div class="flex gap-4">
-                    <button @click="performSearch()" class="flex-1 bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors font-semibold">
-                        <i class="fas fa-search mr-2"></i>Cari
+                    <button @click="performAdvancedSearch()" class="flex-1 bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors font-semibold">
+                        <i class="fas fa-search mr-2"></i>Cari Lanjutan
                     </button>
                     <button @click="showSearch = false" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
                         Batal
@@ -842,6 +1016,13 @@
                 // Navigation & UI State
                 sidebarOpen: false,
                 activeTab: 'dashboard',
+                
+                // Real-time data simulation
+                realTimeData: {
+                    onlineUsers: 0,
+                    currentOrders: 0,
+                    revenueToday: 0
+                },
                 
                 // Modal States
                 showAddProduct: false,
@@ -982,6 +1163,27 @@
                 init() {
                     console.log('Toko app initialized');
                     this.showNotification('Selamat datang di Admin Panel E-Commerce Toko Daur Ulang!');
+                    this.startRealTimeUpdates();
+                    this.loadInitialData();
+                },
+                
+                startRealTimeUpdates() {
+                    // Simulate real-time data updates
+                    setInterval(() => {
+                        this.realTimeData.onlineUsers = Math.floor(Math.random() * 50) + 10;
+                        this.realTimeData.currentOrders = Math.floor(Math.random() * 20) + 5;
+                        this.realTimeData.revenueToday += Math.floor(Math.random() * 100000);
+                    }, 5000);
+                },
+                
+                loadInitialData() {
+                    // Simulate loading data from server
+                    setTimeout(() => {
+                        this.totalProducts = 247;
+                        this.totalOrders = 89;
+                        this.totalRevenue = 12500000;
+                        this.showNotification('Data berhasil dimuat!', 'success');
+                    }, 1000);
                 },
                 
                 // Navigation
@@ -1110,6 +1312,71 @@
                         'cancelled': 'bg-red-100 text-red-800'
                     };
                     return colors[status] || 'bg-gray-100 text-gray-800';
+                },
+                
+                // Export and reporting functions
+                exportData(type) {
+                    const data = {
+                        products: this.products,
+                        orders: this.orders,
+                        customers: this.customers
+                    };
+                    
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${type}_data_${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showNotification(`Data ${type} berhasil diexport!`);
+                },
+                
+                generateReport() {
+                    const report = {
+                        date: new Date().toISOString(),
+                        summary: {
+                            totalProducts: this.totalProducts,
+                            totalOrders: this.totalOrders,
+                            totalRevenue: this.totalRevenue,
+                            averageRating: this.averageRating
+                        },
+                        topProducts: this.products.slice(0, 5),
+                        recentOrders: this.orders.slice(0, 10)
+                    };
+                    
+                    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `laporan_toko_${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showNotification('Laporan berhasil dibuat!');
+                },
+                
+                // Advanced search and filtering
+                performAdvancedSearch() {
+                    const query = this.searchQuery.toLowerCase();
+                    const results = {
+                        products: this.products.filter(p => 
+                            p.name.toLowerCase().includes(query) || 
+                            p.category.toLowerCase().includes(query)
+                        ),
+                        orders: this.orders.filter(o => 
+                            o.customer.toLowerCase().includes(query) || 
+                            o.id.toLowerCase().includes(query)
+                        ),
+                        customers: this.customers.filter(c => 
+                            c.name.toLowerCase().includes(query) || 
+                            c.email.toLowerCase().includes(query)
+                        )
+                    };
+                    
+                    this.showNotification(`Ditemukan ${results.products.length} produk, ${results.orders.length} pesanan, ${results.customers.length} pelanggan`);
+                    return results;
                 }
             }
         }
