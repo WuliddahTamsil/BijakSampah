@@ -41,10 +41,44 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-right: 1.5rem;
+        padding: 0 1.5rem;
         background: linear-gradient(135deg, #75E6DA 0%, #05445E 63%);
-        transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .main-content-wrapper {
+        min-height: 100vh;
+        background: #f9fafb;
+        padding-top: 60px; 
+        padding-left: 4rem; 
+        padding-right: 0;
+        transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative; 
+        overflow-x: hidden;
+        width: 100%;
+        scroll-behavior: smooth;
+        z-index: 1;
+    }
+    .content-container { 
+        width: 100%; 
+        margin: 0; 
+        padding: 2rem; 
+        position: relative; 
+        z-index: 1; 
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+    }
+    .sidebar-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5); z-index: 40; opacity: 0; visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+    
+    /* Ensure sidebar overlays content */
+    aside {
+        z-index: 50 !important;
+    }
+    
     .news-card {
         transition: all 0.3s ease;
         position: relative;
@@ -220,13 +254,16 @@
 </style>
 
 <div class="flex min-h-screen bg-gray-50" x-data="{ sidebarOpen: false, activeCategory: 'all', searchQuery: '', showFilters: false }">
+    {{-- Sidebar Overlay --}}
+    <div class="sidebar-overlay" :class="{ 'active': sidebarOpen }" @click="sidebarOpen = false" style="z-index: 40;"></div>
+
     {{-- Sidebar --}}
     <aside
         x-data="{ open: false, active: 'berita' }"
         x-ref="sidebar"
         @mouseenter="open = true; $root.sidebarOpen = true"
         @mouseleave="open = false; $root.sidebarOpen = false"
-        class="fixed top-0 left-0 z-20 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
+        class="fixed top-0 left-0 z-50 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
         :class="open ? 'w-64' : 'w-16'"
         style="transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 48px; height: calc(100vh - 48px);"
     >
@@ -305,9 +342,9 @@
     </aside>
 
     {{-- Main Content Area --}}
-    <div class="flex-1 min-h-screen bg-gray-50" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.3s cubic-bezier(0.4,0,0.2,1);'">
+    <div class="main-content-wrapper" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
         {{-- Top Header Bar --}}
-        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + ';'">
+        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
             <h1 class="text-white font-semibold text-lg">BijakSampah</h1>
             <div class="flex items-center gap-4">
                 <a href="{{ route('notifikasi') }}" class="relative">
@@ -327,7 +364,7 @@
         </div>
 
         {{-- Main Content --}}
-        <div class="p-8 w-full" style="padding-top: 60px;">
+        <div class="content-container">
             <div class="p-8">
                 {{-- Header Section --}}
                 <div class="flex items-center justify-between mb-8">
