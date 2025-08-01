@@ -61,9 +61,9 @@
         .main-content-wrapper {
             min-height: 100vh;
             background: #f9fafb;
-            padding-top: 80px; 
-            padding-left: 0; 
-            padding-right: 0;
+            padding-top: 60px; 
+            padding-left: 4rem; 
+            padding-right: 2rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative; 
             overflow-x: hidden;
@@ -74,13 +74,11 @@
         .content-container { 
             width: 100%; 
             margin: 0; 
-            padding: 2rem; 
+            padding: 1.5rem; 
             position: relative; 
             z-index: 1; 
             box-sizing: border-box;
             scroll-behavior: smooth;
-            max-width: none;
-            margin: 0;
         }
         .sidebar-overlay {
             position: fixed; 
@@ -161,15 +159,18 @@
         
         /* Responsive fixes */
         @media (max-width: 1024px) {
+            .main-content-wrapper { padding-left: 1rem; padding-right: 1rem; }
             .content-container { padding: 1.5rem; }
             .fixed-header { padding: 0 1rem; }
         }
         @media (max-width: 768px) {
+            .main-content-wrapper { padding-left: 0.5rem; padding-right: 0.5rem; }
             .content-container { padding: 1rem; }
             .fixed-header { padding: 0 0.5rem; }
             .fixed-header h1 { font-size: 1.25rem; }
         }
         @media (max-width: 640px) {
+            .main-content-wrapper { padding-left: 0; padding-right: 0; }
             .content-container { padding: 0.5rem; }
             .fixed-header { padding: 0 0.5rem; }
             .fixed-header h1 { font-size: 1rem; }
@@ -261,32 +262,32 @@
             </div>
         </aside>
 
-                {{-- Main Content Area --}}
-        <div class="main-content-wrapper">
+        {{-- Main Content Area --}}
+        <div class="main-content-wrapper" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + ';'">
             {{-- Top Header Bar --}}
-            <div class="fixed-header">
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <h1 class="text-white font-bold text-2xl">Toko Daur Ulang</h1>
-                    <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-medium">E-Commerce Admin</span>
+            <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + ';'">
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-white font-bold text-2xl">Toko Daur Ulang</h1>
+                        <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-medium">E-Commerce Admin</span>
+                    </div>
+                    
+                    <!-- Real-time Stats -->
+                    <div class="hidden lg:flex items-center gap-6 text-white">
+                        <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
+                            <i class="fas fa-users text-teal-200 text-sm"></i>
+                            <span class="text-sm font-medium" x-text="realTimeData.onlineUsers"></span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
+                            <i class="fas fa-shopping-cart text-teal-200 text-sm"></i>
+                            <span class="text-sm font-medium" x-text="realTimeData.currentOrders"></span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
+                            <i class="fas fa-dollar-sign text-teal-200 text-sm"></i>
+                            <span class="text-sm font-medium" x-text="formatPrice(realTimeData.revenueToday)"></span>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- Real-time Stats -->
-                <div class="hidden lg:flex items-center gap-6 text-white">
-                    <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
-                        <i class="fas fa-users text-teal-200 text-sm"></i>
-                        <span class="text-sm font-medium" x-text="realTimeData.onlineUsers"></span>
-                    </div>
-                    <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
-                        <i class="fas fa-shopping-cart text-teal-200 text-sm"></i>
-                        <span class="text-sm font-medium" x-text="realTimeData.currentOrders"></span>
-                    </div>
-                    <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
-                        <i class="fas fa-dollar-sign text-teal-200 text-sm"></i>
-                        <span class="text-sm font-medium" x-text="formatPrice(realTimeData.revenueToday)"></span>
-                    </div>
-                </div>
-            </div>
                 <div class="flex items-center gap-4">
                     <button @click="showNotifications = true" class="relative text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
                         <i class="fas fa-bell text-lg"></i>
@@ -318,7 +319,7 @@
                         </div>
                     </div>
                 </div>
-            </header>
+            </div>
 
             {{-- Main Content --}}
             <div class="content-container">
@@ -351,72 +352,10 @@
                             <i class="fas fa-chart-line mr-2"></i>Analitik
                         </button>
                     </nav>
-                </div> 
+                </div>
 
                 <!-- Dashboard Tab -->
                 <div x-show="activeTab === 'dashboard'" class="space-y-6">
-                    <!-- Product Detail Section -->
-                    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <!-- Product Image -->
-                            <div class="space-y-4">
-                                <div class="relative">
-                                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80" 
-                                         alt="Tas Nusantara" 
-                                         class="w-full h-80 object-cover rounded-lg shadow-md">
-                                    <div class="absolute top-4 left-4">
-                                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">Tag</span>
-                                    </div>
-                                </div>
-                                <button class="text-teal-600 hover:text-teal-700 text-sm font-medium">
-                                    <i class="fas fa-camera mr-2"></i>Perbarui Foto Produk?
-                                </button>
-                            </div>
-                            
-                            <!-- Product Details -->
-                            <div class="space-y-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Produk</label>
-                                    <input type="text" value="Tas Nusantara" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Harga Produk</label>
-                                    <input type="text" value="Rp20.000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Produk</label>
-                                    <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none">Tas Nusantara Bagus dan Murah....</textarea>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Penjualan/Stok</label>
-                                        <input type="text" value="20 dijual dari 90 Stok" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Produk</label>
-                                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                                            <option>Produk Pakai</option>
-                                            <option>Produk Hias</option>
-                                            <option>Produk Kerajinan</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex gap-4">
-                                    <button class="flex-1 bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors font-semibold">
-                                        <i class="fas fa-save mr-2"></i>Simpan Perubahan
-                                    </button>
-                                    <button class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
-                                        <i class="fas fa-times mr-2"></i>Batal
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Produk BS Section -->
                     <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
                         <div class="mb-6">
@@ -500,8 +439,8 @@
                             </div>
                         </div>
                     </div>
-
-                                        <!-- Additional Stats -->
+                    
+                    <!-- Additional Stats -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white rounded-lg shadow-md p-6">
                             <div class="flex items-center justify-between">
