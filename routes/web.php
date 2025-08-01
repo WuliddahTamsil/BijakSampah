@@ -168,3 +168,8 @@ Route::get('/admin/customers', function () {
 Route::get('/admin/analytics', function () {
     return view('admin.analytics');
 })->name('analytics');
+
+// Catalog Route
+Route::get('/catalog', function () {
+    return view('catalog');
+})->name('catalog');
