@@ -48,22 +48,23 @@
             top: 0; 
             left: 0; 
             right: 0; 
-            height: 48px; 
+            height: 60px; 
             z-index: 40; 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 0 1.5rem; 
+            padding: 0 2rem; 
             background: linear-gradient(135deg, #75E6DA 0%, #05445E 63%);
-            transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .main-content-wrapper {
             min-height: 100vh;
             background: #f9fafb;
-            padding-top: 60px; 
+            padding-top: 80px; 
             padding-left: 4rem; 
-            padding-right: 0;
-            transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-right: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative; 
             overflow-x: hidden;
             width: 100%;
@@ -73,11 +74,13 @@
         .content-container { 
             width: 100%; 
             margin: 0; 
-            padding: 2rem; 
+            padding: 1.5rem; 
             position: relative; 
             z-index: 1; 
             box-sizing: border-box;
             scroll-behavior: smooth;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         .sidebar-overlay {
             position: fixed; 
@@ -160,10 +163,19 @@
         @media (max-width: 1024px) {
             .main-content-wrapper { padding-left: 1rem; padding-right: 1rem; }
             .content-container { padding: 1.5rem; }
+            .fixed-header { padding: 0 1rem; }
         }
         @media (max-width: 768px) {
             .main-content-wrapper { padding-left: 0.5rem; padding-right: 0.5rem; }
             .content-container { padding: 1rem; }
+            .fixed-header { padding: 0 0.5rem; }
+            .fixed-header h1 { font-size: 1.25rem; }
+        }
+        @media (max-width: 640px) {
+            .main-content-wrapper { padding-left: 0; padding-right: 0; }
+            .content-container { padding: 0.5rem; }
+            .fixed-header { padding: 0 0.5rem; }
+            .fixed-header h1 { font-size: 1rem; }
         }
     </style>
 </head>
@@ -180,7 +192,7 @@
             @mouseleave="open = false; $root.sidebarOpen = false"
             class="fixed top-0 left-0 z-50 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
             :class="open ? 'w-64' : 'w-16'"
-            style="transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 48px; height: calc(100vh - 48px);"
+            style="transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 60px; height: calc(100vh - 60px);"
         >
             <div class="relative flex flex-col h-full w-full px-4">
                 <!-- Logo Section -->
@@ -190,48 +202,48 @@
                 </div>
                 
                 <!-- Navigation Menu -->
-                <nav class="flex flex-col gap-2 w-full flex-1">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 p-3 font-medium sidebar-nav-item whitespace-nowrap w-full" :class="open ? (active === 'dashboard' ? 'active text-white' : 'text-white') : (active === 'dashboard' ? 'active text-white justify-center' : 'text-white justify-center')">
+                <nav class="flex flex-col gap-1 w-full flex-1">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 p-3 font-medium sidebar-nav-item whitespace-nowrap w-full rounded-lg" :class="open ? (active === 'dashboard' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'dashboard' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
                         <i class="fas fa-home text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Dashboard</span>
                     </a>
                     
-                    <a href="{{ route('bank-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'bank-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'bank-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                        <i class="fas fa-tachometer-alt text-lg"></i>
+                    <a href="{{ route('bank-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'bank-sampah' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'bank-sampah' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
+                        <i class="fas fa-recycle text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Bank Sampah</span>
                     </a>
                     
-                    <a href="{{ route('toko') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'toko' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'toko' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <a href="{{ route('toko') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'toko' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'toko' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
                         <i class="fas fa-store text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Toko</span>
                     </a>
                     
-                    <a href="{{ route('komunitas') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'komunitas' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'komunitas' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <a href="{{ route('komunitas') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'komunitas' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'komunitas' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
                         <i class="fas fa-users text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Komunitas</span>
                     </a>
                     
-                    <a href="{{ route('berita') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'berita' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'berita' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <a href="{{ route('berita') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'berita' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'berita' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
                         <i class="fas fa-newspaper text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Berita</span>
                     </a>
                     
-                    <a href="{{ route('keuangan') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'keuangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'keuangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                        <i class="fas fa-file-invoice-dollar text-lg"></i>
+                    <a href="{{ route('keuangan') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'keuangan' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'keuangan' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
+                        <i class="fas fa-chart-line text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Keuangan</span>
                     </a>
                     
-                    <a href="{{ route('chat') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'chat' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'pesan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <a href="{{ route('chat') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'chat' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'pesan' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
                         <i class="fas fa-comment-dots text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Pesan</span>
                     </a>
                     
-                    <a href="{{ route('feedback') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'feedback' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'umpan-balik' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                        <i class="fas fa-info-circle text-lg"></i>
+                    <a href="{{ route('feedback') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'feedback' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'umpan-balik' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
+                        <i class="fas fa-star text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Umpan Balik</span>
                     </a>
                     
-                    <a href="{{ route('settings') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'settings' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'settings' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <a href="{{ route('settings') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'settings' ? 'bg-white/20 text-white shadow-lg' : 'text-white hover:bg-white/10') : (active === 'settings' ? 'bg-white/20 text-white justify-center' : 'text-white justify-center hover:bg-white/10')">
                         <i class="fas fa-cog text-lg"></i>
                         <span x-show="open" class="text-sm font-medium">Settings</span>
                     </a>
@@ -239,9 +251,9 @@
                 
                 <!-- User Profile -->
                 <div class="mt-auto">
-                    <div class="flex items-center gap-3 p-3 sidebar-item-hover rounded-lg">
-                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-teal-600"></i>
+                    <div class="flex items-center gap-3 p-3 sidebar-item-hover rounded-lg hover:bg-white/10 transition-colors">
+                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
+                            <i class="fas fa-user text-teal-600 text-sm"></i>
                         </div>
                         <div x-show="open" class="flex-1">
                             <p class="text-white font-medium text-sm">Admin Toko</p>
@@ -254,47 +266,58 @@
 
         {{-- Main Content Area --}}
         <div class="main-content-wrapper" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
-            {{-- Top Header Bar --}}
-            <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
-                <div class="flex items-center gap-4">
-                    <h1 class="text-white font-bold text-xl">Toko Daur Ulang</h1>
-                    <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm">E-Commerce Admin</span>
-                    
-                    <!-- Real-time Stats -->
-                    <div class="hidden md:flex items-center gap-4 text-white text-sm">
-                        <div class="flex items-center gap-1">
-                            <i class="fas fa-users text-teal-200"></i>
-                            <span x-text="realTimeData.onlineUsers"></span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <i class="fas fa-shopping-cart text-teal-200"></i>
-                            <span x-text="realTimeData.currentOrders"></span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <i class="fas fa-dollar-sign text-teal-200"></i>
-                            <span x-text="formatPrice(realTimeData.revenueToday)"></span>
-                        </div>
+                    {{-- Top Header Bar --}}
+        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <h1 class="text-white font-bold text-2xl">Toko Daur Ulang</h1>
+                    <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-medium">E-Commerce Admin</span>
+                </div>
+                
+                <!-- Real-time Stats -->
+                <div class="hidden lg:flex items-center gap-6 text-white">
+                    <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
+                        <i class="fas fa-users text-teal-200 text-sm"></i>
+                        <span class="text-sm font-medium" x-text="realTimeData.onlineUsers"></span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
+                        <i class="fas fa-shopping-cart text-teal-200 text-sm"></i>
+                        <span class="text-sm font-medium" x-text="realTimeData.currentOrders"></span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1 rounded-lg">
+                        <i class="fas fa-dollar-sign text-teal-200 text-sm"></i>
+                        <span class="text-sm font-medium" x-text="formatPrice(realTimeData.revenueToday)"></span>
                     </div>
                 </div>
+            </div>
                 <div class="flex items-center gap-4">
-                    <button @click="showNotifications = true" class="relative text-white hover:text-gray-200 transition-colors">
+                    <button @click="showNotifications = true" class="relative text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
                         <i class="fas fa-bell text-lg"></i>
                         <span x-show="unreadNotifications > 0" class="notification-badge" x-text="unreadNotifications"></span>
                     </button>
-                    <button @click="showSearch = true" class="text-white hover:text-gray-200 transition-colors">
+                    <button @click="showSearch = true" class="text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
                         <i class="fas fa-search text-lg"></i>
                     </button>
+                    <button @click="exportData('all')" class="text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-white hover:bg-opacity-10" title="Export Data">
+                        <i class="fas fa-download text-lg"></i>
+                    </button>
                     <div class="relative">
-                        <button @click="showProfileDropdown = !showProfileDropdown" class="flex items-center gap-2 text-white hover:text-gray-200 transition-colors">
-                            <img src="https://via.placeholder.com/32x32/75E6DA/ffffff?text=A" alt="Profile" class="w-8 h-8 rounded-full">
-                            <span class="text-sm font-medium">Admin</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                        <button @click="showProfileDropdown = !showProfileDropdown" class="flex items-center gap-2 text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
+                            <img src="https://via.placeholder.com/32x32/75E6DA/ffffff?text=A" alt="Profile" class="w-8 h-8 rounded-full border-2 border-white">
+                            <span class="text-sm font-medium hidden md:block">Admin</span>
+                            <i class="fas fa-chevron-down text-xs hidden md:block"></i>
                         </button>
                         <div x-show="showProfileDropdown" @click.away="showProfileDropdown = false" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[90]">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i>Profile
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i>Settings
+                            </a>
                             <hr class="my-2">
-                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
                         </div>
                     </div>
                 </div>
