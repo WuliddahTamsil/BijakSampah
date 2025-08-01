@@ -62,8 +62,8 @@
             min-height: 100vh;
             background: #f9fafb;
             padding-top: 80px; 
-            padding-left: 4rem; 
-            padding-right: 2rem;
+            padding-left: 0; 
+            padding-right: 0;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative; 
             overflow-x: hidden;
@@ -74,13 +74,13 @@
         .content-container { 
             width: 100%; 
             margin: 0; 
-            padding: 1.5rem; 
+            padding: 2rem; 
             position: relative; 
             z-index: 1; 
             box-sizing: border-box;
             scroll-behavior: smooth;
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: none;
+            margin: 0;
         }
         .sidebar-overlay {
             position: fixed; 
@@ -161,18 +161,15 @@
         
         /* Responsive fixes */
         @media (max-width: 1024px) {
-            .main-content-wrapper { padding-left: 1rem; padding-right: 1rem; }
             .content-container { padding: 1.5rem; }
             .fixed-header { padding: 0 1rem; }
         }
         @media (max-width: 768px) {
-            .main-content-wrapper { padding-left: 0.5rem; padding-right: 0.5rem; }
             .content-container { padding: 1rem; }
             .fixed-header { padding: 0 0.5rem; }
             .fixed-header h1 { font-size: 1.25rem; }
         }
         @media (max-width: 640px) {
-            .main-content-wrapper { padding-left: 0; padding-right: 0; }
             .content-container { padding: 0.5rem; }
             .fixed-header { padding: 0 0.5rem; }
             .fixed-header h1 { font-size: 1rem; }
@@ -264,10 +261,10 @@
             </div>
         </aside>
 
-        {{-- Main Content Area --}}
-        <div class="main-content-wrapper" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
-                    {{-- Top Header Bar --}}
-        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '4rem' : '4rem') + ';'">
+                {{-- Main Content Area --}}
+        <div class="main-content-wrapper">
+            {{-- Top Header Bar --}}
+            <div class="fixed-header">
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3">
                     <h1 class="text-white font-bold text-2xl">Toko Daur Ulang</h1>
@@ -359,7 +356,7 @@
                 <!-- Dashboard Tab -->
                 <div x-show="activeTab === 'dashboard'" class="space-y-6">
                     <!-- Product Detail Section -->
-                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <!-- Product Image -->
                             <div class="space-y-4">
@@ -421,7 +418,7 @@
                     </div>
 
                     <!-- Produk BS Section -->
-                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
                         <div class="mb-6">
                             <h2 class="text-2xl font-bold text-gray-900 mb-2">Produk BS</h2>
                             <p class="text-gray-600">Daur ulang jadi peluang, ciptakan produk bernilai dan lingkungan yang lestari.</p>
