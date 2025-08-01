@@ -116,6 +116,49 @@ Route::get('/test-theme', function () {
     return view('test-theme');
 })->name('test-theme');
 
+<<<<<<< HEAD
 Route::get('/demo-theme', function () {
     return view('demo-theme');
 })->name('demo-theme');
+=======
+Route::get('/poin-nasabah', function () {
+    return view('poin-nasabah');
+});
+
+
+
+Route::get('/non-nasabah-register', function () {
+    return view('non-nasabah-register');
+});
+
+
+
+Route::get('/non-nasabah-dashboard', function () {
+    return view('non-nasabah-dashboard');
+});
+
+
+Route::get('/poin-non-nasabah', function () {
+    return view('poin-non-nasabah');
+});
+
+Route::get('/pilihan-login', function () {
+    return view('pilihan-login');
+});
+
+Route::get('/dashboard-banksampah', function () {
+    return view('dashboard-banksampah');
+});
+
+Route::get('/data-nasabah-banksampah', function () {
+    return view('data-nasabah-banksampah');
+});
+
+Route::get('/profile-nasabah', function () {
+    return view('profile-nasabah');
+});
+
+Route::get('/penjemputan-sampah-banksampah', function () {
+    return view('penjemputan-sampah-banksampah');
+});
+>>>>>>> f90f449 (wuliddah bank)
