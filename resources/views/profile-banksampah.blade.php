@@ -53,7 +53,164 @@
         transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Dark theme overrides for penjemputan page */
+    /* Profile Header Styles */
+    .profile-header {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 2rem;
+    }
+    .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #e5e7eb;
+    }
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .profile-details {
+        flex: 1;
+    }
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 0.25rem;
+    }
+    .profile-email {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+    .edit-button {
+        background: #1e40af;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .edit-button:hover {
+        background: #1e3a8a;
+    }
+    
+    /* Balance Card Styles */
+    .balance-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    .balance-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    .date-badge {
+        background: #16a34a;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    .menu-dots {
+        color: #9ca3af;
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .menu-dots:hover {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+    .balance-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    .balance-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 0.25rem;
+    }
+    .balance-type {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+    
+    /* Form Styles */
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    .form-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e40af;
+        margin-bottom: 1.5rem;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+    .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background-color: #f9fafb;
+        color: #374151;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        background-color: white;
+    }
+    .form-input.focused {
+        border-color: #1e40af;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+    
+    /* Dark theme overrides for settings page */
     .dark .text-gray-900 { color: var(--text-primary) !important; }
     .dark .text-gray-600 { color: var(--text-secondary) !important; }
     .dark .text-gray-500 { color: var(--text-muted) !important; }
@@ -84,92 +241,12 @@
     .sidebar-item-hover {
         font-weight: normal !important;
     }
-
-    /* Notification badge */
-    .notification-badge {
-        background: white;
-        color: #059669;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: bold;
-    }
-
-    /* Penjemputan specific styles */
-    .stat-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        border: 1px solid #e5e7eb;
-    }
-
-    .stat-card .icon {
-        font-size: 2rem;
-        color: #3b82f6;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-card .number {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.25rem;
-    }
-
-    .stat-card .label {
-        font-size: 0.875rem;
-        color: #6b7280;
-    }
-
-    .btn {
-        background: #3b82f6;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        cursor: pointer;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .btn:hover {
-        background: #2563eb;
-    }
-
-    .status {
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-    }
-
-    .status.pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .status.progress {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status.completed {
-        background: #d1fae5;
-        color: #065f46;
-    }
 </style>
 
-<div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="penjemputanApp()" x-init="init()">
+<div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="profileBanksampahApp()" x-init="init()">
     {{-- Sidebar --}}
     <aside
-        x-data="{ open: false, active: 'penjemputan-sampah' }"
+        x-data="{ open: false, active: 'profile-banksampah' }"
         x-ref="sidebar"
         @mouseenter="open = true; $root.sidebarOpen = true"
         @mouseleave="open = false; $root.sidebarOpen = false"
@@ -196,7 +273,9 @@
                 <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'nasabah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'nasabah' ? '' : 'nasabah'">
                     <i class="fas fa-users text-lg"></i>
                     <span x-show="open" class="text-xs font-medium">Nasabah</span>
-                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'nasabah' ? 'rotate-180' : ''"></i>
+                    <div x-show="open" class="flex items-center gap-2 ml-auto">
+                        <i class="fas fa-chevron-down text-xs transition-transform" :class="active === 'nasabah' ? 'rotate-180' : ''"></i>
+                    </div>
                 </div>
                 
                 {{-- Sub-menu Nasabah --}}
@@ -212,7 +291,7 @@
                 </div>
                 
                 {{-- Penjemputan Sampah Link --}}
-                <a href="{{ route('penjemputan-sampah-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full active" :class="open ? (active === 'penjemputan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjemputan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                <a href="{{ route('penjemputan-sampah-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'penjemputan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjemputan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-map-marker-alt text-lg"></i>
                     <span x-show="open" class="text-xs font-medium">Penjemputan Sampah</span>
                 </a>
@@ -220,16 +299,7 @@
                 {{-- Penimbangan Section --}}
                 <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'penimbangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penimbangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'penimbangan' ? '' : 'penimbangan'">
                     <i class="fas fa-weight-hanging text-lg"></i>
-                    <span x-show="open" class="text-xs font-medium">Penimbangan</span>
-                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'penimbangan' ? 'rotate-180' : ''"></i>
-                </div>
-                
-                {{-- Sub-menu Penimbangan --}}
-                <div x-show="open && active === 'penimbangan'" x-transition class="ml-4 space-y-1">
-                    <a href="{{ route('input-setoran1') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'input-setoran1' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
-                        <i class="fas fa-plus text-sm"></i>
-                        <span class="text-xs font-medium">Input Setoran</span>
-                    </a>
+                    <span x-show="open" class="text-xs font-medium">Input Penimbangan</span>
                 </div>
                 
                 {{-- Data Sampah Link --}}
@@ -267,7 +337,7 @@
         <div class="fixed-header" :style="'padding-left: 4rem;'">
             <div class="flex items-center gap-4">
                 <div>
-                    <h1 class="text-white font-semibold text-lg">Penjemputan Sampah</h1>
+                    <h1 class="text-white font-semibold text-lg">Profil Nasabah</h1>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -291,118 +361,100 @@
         <div class="p-8 w-full" style="padding-top: 60px;">
             {{-- Page Title --}}
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Penjemputan Sampah</h1>
-                <p class="text-gray-600 mt-2">Kelola permintaan penjemputan sampah dari nasabah</p>
+                <h1 class="text-2xl font-bold text-gray-900">Profil Nasabah</h1>
             </div>
 
-            {{-- Statistics --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-clock"></i></div>
-                    <div class="number">12</div>
-                    <div class="label">Menunggu Penjemputan</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-truck"></i></div>
-                    <div class="number">8</div>
-                    <div class="label">Dalam Proses</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="number">45</div>
-                    <div class="label">Selesai Hari Ini</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-calendar"></i></div>
-                    <div class="number">156</div>
-                    <div class="label">Total Bulan Ini</div>
+            {{-- Profile Header --}}
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <img src="{{ asset('asset/img/wuwu ft.jpg') }}" alt="Jane Cooper">
+                    </div>
+                    <div class="profile-details">
+                        <h2 class="profile-name">Jane Cooper</h2>
+                        <p class="profile-email">janee@gmail.com</p>
+                    </div>
+                    <button class="edit-button">Edit</button>
                 </div>
             </div>
 
-            {{-- Pickup Requests Table --}}
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900">Daftar Permintaan Penjemputan</h3>
-                    <button class="btn">Tambah Penjemputan</button>
+            {{-- Content Grid --}}
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {{-- Balance Card --}}
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <div class="date-badge">23 Maret 25</div>
+                        <div class="menu-dots">
+                            <i class="fas fa-ellipsis-v text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="balance-title">Saldo</div>
+                    <div class="balance-amount">14.297 Koin</div>
+                    <div class="balance-type">Pemasukan</div>
                 </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">ID</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Nasabah</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Alamat</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Jenis Sampah</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Estimasi Berat</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Tanggal Request</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ001</td>
-                                <td class="py-3 px-4">Ahmad Rizki</td>
-                                <td class="py-3 px-4">Jl. Sudirman No. 123, Jakarta</td>
-                                <td class="py-3 px-4">Plastik, Kertas</td>
-                                <td class="py-3 px-4">15 kg</td>
-                                <td class="py-3 px-4">2024-01-15</td>
-                                <td class="py-3 px-4"><span class="status pending">Menunggu</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Proses</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ002</td>
-                                <td class="py-3 px-4">Siti Nurhaliza</td>
-                                <td class="py-3 px-4">Jl. Thamrin No. 45, Jakarta</td>
-                                <td class="py-3 px-4">Kardus, Botol</td>
-                                <td class="py-3 px-4">8 kg</td>
-                                <td class="py-3 px-4">2024-01-15</td>
-                                <td class="py-3 px-4"><span class="status progress">Dalam Proses</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Lacak</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ003</td>
-                                <td class="py-3 px-4">Budi Santoso</td>
-                                <td class="py-3 px-4">Jl. Gatot Subroto No. 67, Jakarta</td>
-                                <td class="py-3 px-4">Plastik, Logam</td>
-                                <td class="py-3 px-4">22 kg</td>
-                                <td class="py-3 px-4">2024-01-14</td>
-                                <td class="py-3 px-4"><span class="status completed">Selesai</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Detail</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ004</td>
-                                <td class="py-3 px-4">Dewi Sartika</td>
-                                <td class="py-3 px-4">Jl. Asia Afrika No. 89, Jakarta</td>
-                                <td class="py-3 px-4">Kertas, Kaca</td>
-                                <td class="py-3 px-4">12 kg</td>
-                                <td class="py-3 px-4">2024-01-14</td>
-                                <td class="py-3 px-4"><span class="status pending">Menunggu</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Proses</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ005</td>
-                                <td class="py-3 px-4">Rudi Hermawan</td>
-                                <td class="py-3 px-4">Jl. Sudirman No. 234, Jakarta</td>
-                                <td class="py-3 px-4">Plastik, Elektronik</td>
-                                <td class="py-3 px-4">18 kg</td>
-                                <td class="py-3 px-4">2024-01-13</td>
-                                <td class="py-3 px-4"><span class="status completed">Selesai</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Detail</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                {{-- Customer Data Form --}}
+                <div class="lg:col-span-2 form-section">
+                    <h3 class="form-title">Data Nasabah</h3>
+                    
+                    <div class="form-grid">
+                        {{-- Left Column --}}
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-input" value="Jane Cooper" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Nomor Telepon</label>
+                                <input type="tel" class="form-input" value="+62 85725517237" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Alamat</label>
+                                <input type="text" class="form-input" value="Jl. Golf Perum Citra Sari RT 33 RW 07" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Tanggal lahir</label>
+                                <input type="text" class="form-input" value="25-10-1997" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Jenis Kelamin</label>
+                                <input type="text" class="form-input" value="Perempuan" readonly>
+                            </div>
+                        </div>
+                        
+                        {{-- Right Column --}}
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label">NIK</label>
+                                <input type="text" class="form-input focused" value="6475299382400000" @focus="focusInput($event)" @blur="blurInput($event)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">No KK</label>
+                                <input type="text" class="form-input" value="6475299382400000" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Posisi Dalam Keluarga</label>
+                                <input type="text" class="form-input" value="Ibu Rumah Tangga" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">No Rekening</label>
+                                <input type="text" class="form-input" value="001-007-1910-2025-002" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">ID Unit Bak sampah</label>
+                                <input type="text" class="form-input" value="SR-453301" readonly>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -410,13 +462,18 @@
 </div>
 
 <script>
-function penjemputanApp() {
-    return {
-        sidebarOpen: false,
-        init() {
-            console.log('Penjemputan App initialized');
+    function profileBanksampahApp() {
+        return {
+            init() {
+                console.log('Profile Banksampah App initialized');
+            },
+            focusInput(event) {
+                event.target.classList.add('focused');
+            },
+            blurInput(event) {
+                event.target.classList.remove('focused');
+            }
         }
-    };
-}
+    }
 </script>
 @endsection

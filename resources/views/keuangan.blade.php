@@ -2,7 +2,7 @@
 
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
     html, body {
         overflow-x: hidden;
@@ -234,7 +234,7 @@
                                 <p class="text-3xl font-black text-gray-900 mb-2">Rp202.000</p>
                                 <p class="text-green-700 text-sm font-bold flex items-center">
                                     <i class="fas fa-arrow-up mr-1"></i>
-                                    +12.5% dari bulan lalu
+                                    +327718 Koin
                                 </p>
                             </div>
                             <div class="bg-green-600 rounded-full p-4 shadow-xl">
@@ -243,19 +243,19 @@
                         </div>
                     </div>
 
-                    <!-- Pemasukan Bulan Ini -->
-                    <div class="stat-card bg-white rounded-2xl shadow-2xl p-6 border-2 border-blue-200 hover:border-blue-300">
+                    <!-- Total Transaksi -->
+                    <div class="stat-card bg-white rounded-2xl shadow-2xl p-6 border-2 border-purple-200 hover:border-purple-300">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-blue-700 text-sm font-bold uppercase tracking-wide mb-2">Pemasukan</p>
-                                <p class="text-3xl font-black text-gray-900 mb-2">Rp156.000</p>
-                                <p class="text-blue-700 text-sm font-bold flex items-center">
-                                    <i class="fas fa-arrow-up mr-1"></i>
-                                    +8.2% dari bulan lalu
+                                <p class="text-purple-700 text-sm font-bold uppercase tracking-wide mb-2">Total Transaksi</p>
+                                <p class="text-3xl font-black text-gray-900 mb-2">24</p>
+                                <p class="text-purple-700 text-sm font-bold flex items-center">
+                                    <i class="fas fa-plus mr-1"></i>
+                                    +5 transaksi hari ini
                                 </p>
                             </div>
-                            <div class="bg-blue-600 rounded-full p-4 shadow-xl">
-                                <i class="fas fa-arrow-up text-2xl text-white"></i>
+                            <div class="bg-purple-600 rounded-full p-4 shadow-xl">
+                                <i class="fas fa-exchange-alt text-2xl text-white"></i>
                             </div>
                         </div>
                     </div>
@@ -277,38 +277,22 @@
                         </div>
                     </div>
 
-                    <!-- Transaksi -->
-                    <div class="stat-card bg-white rounded-2xl shadow-2xl p-6 border-2 border-purple-200 hover:border-purple-300">
+                    <!-- Pemasukan Bulan Ini -->
+                    <div class="stat-card bg-white rounded-2xl shadow-2xl p-6 border-2 border-blue-200 hover:border-blue-300">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-purple-700 text-sm font-bold uppercase tracking-wide mb-2">Total Transaksi</p>
-                                <p class="text-3xl font-black text-gray-900 mb-2">24</p>
-                                <p class="text-purple-700 text-sm font-bold flex items-center">
-                                    <i class="fas fa-plus mr-1"></i>
-                                    +5 transaksi hari ini
+                                <p class="text-blue-700 text-sm font-bold uppercase tracking-wide mb-2">Pemasukan</p>
+                                <p class="text-3xl font-black text-gray-900 mb-2">Rp156.000</p>
+                                <p class="text-blue-700 text-sm font-bold flex items-center">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    +8.2% dari bulan lalu
                                 </p>
                             </div>
-                            <div class="bg-purple-600 rounded-full p-4 shadow-xl">
-                                <i class="fas fa-exchange-alt text-2xl text-white"></i>
+                            <div class="bg-blue-600 rounded-full p-4 shadow-xl">
+                                <i class="fas fa-arrow-up text-2xl text-white"></i>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                {{-- Toggle Buttons --}}
-                <div class="flex gap-4 mb-8">
-                    <button 
-                        @click="activeTab = 'pemasukan'" 
-                        :class="activeTab === 'pemasukan' ? 'bg-green-600 text-black shadow-2xl scale-105 border-2 border-green-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-400'"
-                        class="px-8 py-3 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg">
-                        <i class="fas fa-arrow-up mr-2"></i>Pemasukan
-                    </button>
-                    <button 
-                        @click="activeTab = 'pengeluaran'" 
-                        :class="activeTab === 'pengeluaran' ? 'bg-red-600 text-white shadow-2xl scale-105 border-2 border-red-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-400'"
-                        class="px-8 py-3 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg">
-                        <i class="fas fa-arrow-down mr-2"></i>Pengeluaran
-                    </button>
                 </div>
                 
                 {{-- Charts Section --}}
@@ -317,12 +301,12 @@
                     <div class="bg-white rounded-2xl shadow-2xl p-6 border-2 border-gray-200">
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <h3 class="text-xl font-black text-gray-900 mb-2">Tren Pemasukan 7 Hari Terakhir</h3>
-                                <p class="text-gray-700 font-medium">Analisis pemasukan harian</p>
+                                <h3 class="text-xl font-black text-gray-900 mb-2">Tren Keuangan 7 Hari Terakhir</h3>
+                                <p class="text-gray-700 font-medium">Analisis keuangan harian</p>
                             </div>
                             <div class="flex items-center gap-3 bg-blue-100 px-4 py-2 rounded-full border border-blue-300">
                                 <span class="w-4 h-4 bg-blue-600 rounded-full"></span>
-                                <span class="text-sm font-bold text-blue-800">Pemasukan</span>
+                                <span class="text-sm font-bold text-blue-800">Keuangan</span>
                             </div>
                         </div>
                         <div class="h-64">
@@ -378,16 +362,16 @@
                     <div class="flex items-center justify-between mb-6">
                         <div>
                             <h3 class="text-xl font-black text-gray-900 mb-2">Tren Keuangan 30 Hari Terakhir</h3>
-                            <p class="text-gray-700 font-medium">Analisis tren pemasukan vs pengeluaran</p>
+                            <p class="text-gray-700 font-medium">Analisis tren keuangan</p>
                         </div>
                         <div class="flex items-center gap-4">
                             <div class="flex items-center gap-3 bg-green-100 px-4 py-2 rounded-full border border-green-300">
                                 <span class="w-4 h-4 bg-green-600 rounded-full"></span>
-                                <span class="text-sm font-bold text-green-800">Pemasukan</span>
+                                <span class="text-sm font-bold text-green-800">Keuangan</span>
                             </div>
                             <div class="flex items-center gap-3 bg-red-100 px-4 py-2 rounded-full border border-red-300">
                                 <span class="w-4 h-4 bg-red-600 rounded-full"></span>
-                                <span class="text-sm font-bold text-red-800">Pengeluaran</span>
+                                <span class="text-sm font-bold text-red-800">Transaksi</span>
                             </div>
                         </div>
                     </div>
@@ -401,18 +385,48 @@
                     </div>
                 </div>
                 
-                                <!-- Tabel Riwayat -->
+                {{-- Toggle Buttons --}}
+                <div class="flex items-center justify-center mb-8">
+                    <div class="bg-gray-100 rounded-2xl p-1 shadow-lg border-2 border-gray-200">
+                        <div class="flex relative">
+                            <!-- Active Background Slider -->
+                            <div 
+                                class="absolute top-1 bottom-1 rounded-xl transition-all duration-300 ease-in-out"
+                                :class="activeTab === 'pemasukan' ? 'bg-green-500' : 'bg-red-500'"
+                                :style="activeTab === 'pemasukan' ? 'transform: translateX(0); width: 8rem;' : 'transform: translateX(8rem); width: 8rem;'">
+                            </div>
+                            
+                            <!-- Pemasukan Button -->
+                            <button 
+                                @click="activeTab = 'pemasukan'" 
+                                class="relative px-8 py-3 rounded-xl font-medium text-lg transition-all duration-300 z-10 min-w-[8rem]"
+                                :class="activeTab === 'pemasukan' ? 'text-white' : 'text-gray-600 hover:text-gray-800'">
+                                <i class="fas fa-arrow-up mr-2"></i>Pemasukan
+                            </button>
+                            
+                            <!-- Pengeluaran Button -->
+                            <button 
+                                @click="activeTab = 'pengeluaran'" 
+                                class="relative px-8 py-3 rounded-xl font-medium text-lg transition-all duration-300 z-10 min-w-[8rem]"
+                                :class="activeTab === 'pengeluaran' ? 'text-white' : 'text-gray-600 hover:text-gray-800'">
+                                <i class="fas fa-arrow-down mr-2"></i>Pengeluaran
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabel Riwayat -->
                 <div class="bg-white rounded-2xl shadow-2xl p-8 border-2 border-gray-200">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <div class="text-gray-900 text-2xl font-black mb-2" x-text="activeTab === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran'"></div>
-                            <div class="text-gray-700 text-lg font-bold">Cek riwayat <span x-text="activeTab === 'pemasukan' ? 'pemasukan' : 'pengeluaran'"></span> Anda!</div>
+                            <div class="text-gray-900 text-2xl font-medium mb-2" x-text="activeTab === 'pemasukan' ? 'Riwayat Pemasukan' : 'Riwayat Pengeluaran'"></div>
+                            <div class="text-gray-700 text-lg font-medium" x-text="activeTab === 'pemasukan' ? 'Cek riwayat pemasukan dari Top Up BSPay dan Toko!' : 'Cek riwayat pengeluaran untuk beli sampah!'"></div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <button onclick="exportData()" class="bg-blue-600 text-black px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 font-bold shadow-lg">
-                                <i class="fas fa-download mr-2"></i>Export
+                            <button onclick="exportToExcel()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium shadow-lg">
+                                <i class="fas fa-download mr-2"></i>Export Excel
                             </button>
-                            <button onclick="showFilterModal()" class="bg-green-600 text-black px-4 py-2 rounded-lg hover:bg-green-700 transition-all duration-300 font-bold shadow-lg">
+                            <button onclick="showFilterModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-lg">
                                 <i class="fas fa-filter mr-2"></i>Filter
                             </button>
                         </div>
@@ -421,62 +435,104 @@
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b-2 border-gray-300 bg-gray-50">
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">No. Invoice</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Tanggal</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Nama Pembeli</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Nama Produk</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Kategori</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Harga</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Status</th>
-                                    <th class="px-4 py-3 text-left font-black text-lg text-gray-900">Aksi</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">No. Invoice</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">Tanggal</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900" x-text="activeTab === 'pemasukan' ? 'Sumber' : 'Pembeli'"></th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900" x-text="activeTab === 'pemasukan' ? 'Jenis Transaksi' : 'Jenis Sampah'"></th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">Kategori</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">Harga (Rp)</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">Koin</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">Status</th>
+                                    <th class="px-4 py-3 text-left font-medium text-lg text-gray-900">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for ($i = 0; $i < 8; $i++)
-                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all duration-300">
-                                    <td class="px-4 py-3 font-bold text-gray-900">1#TEK12{{ $i+3 }}</td>
-                                    <td class="px-4 py-3 font-bold text-gray-900">16/06/25</td>
-                                    <td class="px-4 py-3 font-bold text-gray-900">{{ $i % 2 == 0 ? 'Wugis' : 'BS' }}</td>
-                                    <td class="px-4 py-3 font-bold text-gray-900">{{ $i % 2 == 0 ? 'T#Tas Kreasi' : 'TopUp Coin' }}</td>
-                                    <td class="px-4 py-3">
-                                        <span class="px-3 py-2 rounded-full text-sm font-black {{ $i % 3 == 0 ? 'bg-green-100 text-green-800 border-2 border-green-300' : ($i % 3 == 1 ? 'bg-blue-100 text-blue-800 border-2 border-blue-300' : 'bg-yellow-100 text-yellow-800 border-2 border-yellow-300') }}">
-                                            {{ $i % 3 == 0 ? 'Organik' : ($i % 3 == 1 ? 'Anorganik' : 'B3') }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 font-black text-lg text-gray-900">Rp{{ number_format(20000 + ($i * 5000)) }}</td>
-                                    <td class="px-4 py-3">
-                                        <span class="px-3 py-2 rounded-full text-sm font-black bg-green-100 text-green-800 border-2 border-green-300">
-                                            Selesai
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-3">
-                                            <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800 transition-all duration-300 hover:scale-110" title="Lihat Detail">
-                                                <i class="fas fa-eye text-lg"></i>
-                                            </button>
-                                            <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800 transition-all duration-300 hover:scale-110" title="Download Invoice">
-                                                <i class="fas fa-download text-lg"></i>
-                                            </button>
-                                            <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800 transition-all duration-300 hover:scale-110" title="Menu">
-                                                <i class="fas fa-ellipsis-v text-lg"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endfor
+                                <!-- Pemasukan Data -->
+                                <template x-if="activeTab === 'pemasukan'">
+                                    @for ($i = 0; $i < 8; $i++)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                                        <td class="px-4 py-3 font-medium text-gray-900">1#TOP{{ $i+3 }}</td>
+                                        <td class="px-4 py-3 font-medium text-gray-900">16/06/25</td>
+                                        <td class="px-4 py-3 font-medium text-gray-900">{{ $i % 2 == 0 ? 'BSPay' : 'Toko BijakSampah' }}</td>
+                                        <td class="px-4 py-3 font-medium text-gray-900">{{ $i % 2 == 0 ? 'Top Up Koin' : 'Penjualan Produk' }}</td>
+                                        <td class="px-4 py-3">
+                                            <span class="px-3 py-2 rounded-full text-sm font-medium {{ $i % 2 == 0 ? 'bg-blue-100 text-blue-800 border-2 border-blue-300' : 'bg-green-100 text-green-800 border-2 border-green-300' }}">
+                                                {{ $i % 2 == 0 ? 'Top Up' : 'Toko' }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 font-medium text-lg text-gray-900">Rp{{ number_format(50000 + ($i * 10000)) }}</td>
+                                        <td class="px-4 py-3 font-medium text-lg text-gray-900">{{ 50 + ($i * 10) }}</td>
+                                        <td class="px-4 py-3">
+                                            <span class="px-3 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800 border-2 border-green-300">
+                                                Selesai
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800 transition-all duration-300 hover:scale-110" title="Lihat Detail">
+                                                    <i class="fas fa-eye text-lg"></i>
+                                                </button>
+                                                <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800 transition-all duration-300 hover:scale-110" title="Download Invoice">
+                                                    <i class="fas fa-download text-lg"></i>
+                                                </button>
+                                                <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800 transition-all duration-300 hover:scale-110" title="Menu">
+                                                    <i class="fas fa-ellipsis-v text-lg"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endfor
+                                </template>
+                                
+                                <!-- Pengeluaran Data -->
+                                <template x-if="activeTab === 'pengeluaran'">
+                                    @for ($i = 0; $i < 8; $i++)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                                        <td class="px-4 py-3 font-medium text-gray-900">1#BELI{{ $i+3 }}</td>
+                                        <td class="px-4 py-3 font-medium text-gray-900">16/06/25</td>
+                                        <td class="px-4 py-3 font-medium text-gray-900">{{ $i % 2 == 0 ? 'Wugis' : 'BS' }}</td>
+                                        <td class="px-4 py-3 font-medium text-gray-900">{{ $i % 3 == 0 ? 'Sampah Organik' : ($i % 3 == 1 ? 'Sampah Anorganik' : 'Sampah B3') }}</td>
+                                        <td class="px-4 py-3">
+                                            <span class="px-3 py-2 rounded-full text-sm font-medium {{ $i % 3 == 0 ? 'bg-green-100 text-green-800 border-2 border-green-300' : ($i % 3 == 1 ? 'bg-blue-100 text-blue-800 border-2 border-blue-300' : 'bg-yellow-100 text-yellow-800 border-2 border-yellow-300') }}">
+                                                {{ $i % 3 == 0 ? 'Organik' : ($i % 3 == 1 ? 'Anorganik' : 'B3') }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 font-medium text-lg text-gray-900">Rp{{ number_format(10000 + ($i * 5000)) }}</td>
+                                        <td class="px-4 py-3 font-medium text-lg text-gray-900">{{ 10 + ($i * 5) }}</td>
+                                        <td class="px-4 py-3">
+                                            <span class="px-3 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800 border-2 border-green-300">
+                                                Selesai
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800 transition-all duration-300 hover:scale-110" title="Lihat Detail">
+                                                    <i class="fas fa-eye text-lg"></i>
+                                                </button>
+                                                <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800 transition-all duration-300 hover:scale-110" title="Download Invoice">
+                                                    <i class="fas fa-download text-lg"></i>
+                                                </button>
+                                                <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800 transition-all duration-300 hover:scale-110" title="Menu">
+                                                    <i class="fas fa-ellipsis-v text-lg"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endfor
+                                </template>
                             </tbody>
                         </table>
                     </div>
                     <div class="flex items-center justify-between mt-6">
-                        <div class="text-gray-700 text-lg font-bold">
+                        <div class="text-gray-700 text-lg font-medium">
                             Menampilkan 1-8 dari 24 transaksi
                         </div>
                         <div class="flex items-center gap-3">
-                            <button onclick="previousPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-300 font-bold border-2 border-gray-300">
+                            <button onclick="previousPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-300 font-medium border-2 border-gray-300">
                                 <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
                             </button>
-                            <span class="text-gray-900 px-4 py-2 font-black text-lg bg-blue-100 rounded-lg border-2 border-blue-300">1</span>
-                            <button onclick="nextPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-300 font-bold border-2 border-gray-300">
+                            <span class="text-gray-900 px-4 py-2 font-medium text-lg bg-blue-100 rounded-lg border-2 border-blue-300">1</span>
+                            <button onclick="nextPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-300 font-medium border-2 border-gray-300">
                                 Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
                             </button>
                         </div>
@@ -488,187 +544,175 @@
  </div>
 
  <!-- Filter Modal -->
- <div id="filterModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-     <div class="flex items-center justify-center min-h-screen">
-         <div class="bg-white rounded-lg p-6 w-96">
-             <div class="flex items-center justify-between mb-4">
-                 <h3 class="text-lg font-semibold">Filter Transaksi</h3>
-                 <button onclick="hideFilterModal()" class="text-gray-500 hover:text-gray-700">
-                     <i class="fas fa-times"></i>
-                 </button>
+ <div id="filterModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+     <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-2xl">
+         <div class="flex items-center justify-between mb-6">
+             <h3 class="text-xl font-bold text-gray-900">Filter Transaksi</h3>
+             <button onclick="hideFilterModal()" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                 <i class="fas fa-times text-lg"></i>
+             </button>
+         </div>
+         <div class="space-y-6">
+             <div>
+                 <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                 <input type="date" id="filterTanggal" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-200">
              </div>
-             <div class="space-y-4">
-                 <div>
-                     <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-                     <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                 </div>
-                 <div>
-                     <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                     <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                         <option value="">Semua Kategori</option>
-                         <option value="organik">Organik</option>
-                         <option value="anorganik">Anorganik</option>
-                         <option value="b3">B3</option>
-                     </select>
-                 </div>
-                 <div>
-                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                     <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                         <option value="">Semua Status</option>
-                         <option value="selesai">Selesai</option>
-                         <option value="pending">Pending</option>
-                         <option value="batal">Batal</option>
-                     </select>
-                 </div>
-                 <div class="flex gap-2 pt-4">
-                     <button onclick="applyFilter()" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                         Terapkan
-                     </button>
-                     <button onclick="resetFilter()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400">
-                         Reset
-                     </button>
-                 </div>
+             <div>
+                 <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                 <select id="filterKategori" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-200">
+                     <option value="">Semua Kategori</option>
+                     <option value="Top Up">Top Up</option>
+                     <option value="Toko">Toko</option>
+                     <option value="Organik">Organik</option>
+                     <option value="Anorganik">Anorganik</option>
+                     <option value="B3">B3</option>
+                 </select>
+             </div>
+             <div>
+                 <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                 <select id="filterStatus" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-200">
+                     <option value="">Semua Status</option>
+                     <option value="Selesai">Selesai</option>
+                     <option value="Pending">Pending</option>
+                     <option value="Batal">Batal</option>
+                 </select>
+             </div>
+             <div class="flex gap-3 pt-4">
+                 <button onclick="applyFilter()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium">
+                     Terapkan Filter
+                 </button>
+                 <button onclick="resetFilter()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-all duration-200 font-medium">
+                     Reset
+                 </button>
              </div>
          </div>
      </div>
  </div>
 
  <!-- Transaction Detail Modal -->
- <div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-     <div class="flex items-center justify-center min-h-screen">
-         <div class="bg-white rounded-lg p-6 w-96">
-             <div class="flex items-center justify-between mb-4">
-                 <h3 class="text-lg font-semibold">Detail Transaksi</h3>
-                 <button onclick="hideTransactionModal()" class="text-gray-500 hover:text-gray-700">
-                     <i class="fas fa-times"></i>
-                 </button>
-             </div>
-             <div id="transactionDetails" class="space-y-3">
-                 <!-- Transaction details will be populated here -->
-             </div>
+ <div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+     <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-2xl transform transition-all duration-300">
+         <div class="flex items-center justify-between mb-6">
+             <h3 class="text-xl font-bold text-gray-900">Detail Transaksi</h3>
+             <button onclick="hideTransactionModal()" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                 <i class="fas fa-times text-lg"></i>
+             </button>
+         </div>
+         <div id="transactionDetails" class="space-y-4">
+             <!-- Transaction details will be populated here -->
+         </div>
+         <div class="mt-6 flex justify-end">
+             <button onclick="hideTransactionModal()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-200 font-medium">
+                 Tutup
+             </button>
          </div>
      </div>
  </div>
 
  <script>
- // Chart.js Charts
+ // Simple Charts - No complex operations
  document.addEventListener('DOMContentLoaded', function() {
-     // Bar Chart - Pemasukan 7 Hari
-     const barCtx = document.getElementById('barChart').getContext('2d');
-     const barChart = new Chart(barCtx, {
-         type: 'bar',
-         data: {
-             labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-             datasets: [{
-                 label: 'Pemasukan',
-                 data: [15000, 22000, 18000, 25000, 30000, 35000, 40000],
-                 backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                 borderColor: 'rgba(59, 130, 246, 1)',
-                 borderWidth: 1
-             }]
-         },
-         options: {
-             responsive: true,
-             maintainAspectRatio: false,
-             plugins: {
-                 legend: {
-                     display: false
+     try {
+         // Simple Bar Chart
+         const barCtx = document.getElementById('barChart');
+         if (barCtx) {
+             new Chart(barCtx.getContext('2d'), {
+                 type: 'bar',
+                 data: {
+                     labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                     datasets: [{
+                         label: 'Pemasukan',
+                         data: [15000, 22000, 18000, 25000, 30000, 35000, 40000],
+                         backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                     }]
+                 },
+                 options: {
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     plugins: { legend: { display: false } }
                  }
-             },
-             scales: {
-                 y: {
-                     beginAtZero: true,
-                     ticks: {
-                         callback: function(value) {
-                             return 'Rp' + value.toLocaleString();
-                         }
-                     }
-                 }
-             }
+             });
          }
-     });
 
-     // Doughnut Chart - Distribusi Kategori
-     const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
-     const doughnutChart = new Chart(doughnutCtx, {
-         type: 'doughnut',
-         data: {
-             labels: ['Organik', 'Anorganik', 'B3'],
-             datasets: [{
-                 data: [70, 20, 10],
-                 backgroundColor: [
-                     'rgba(16, 185, 129, 0.8)',
-                     'rgba(59, 130, 246, 0.8)',
-                     'rgba(245, 158, 11, 0.8)'
-                 ],
-                 borderColor: [
-                     'rgba(16, 185, 129, 1)',
-                     'rgba(59, 130, 246, 1)',
-                     'rgba(245, 158, 11, 1)'
-                 ],
-                 borderWidth: 2
-             }]
-         },
-         options: {
-             responsive: true,
-             maintainAspectRatio: false,
-             plugins: {
-                 legend: {
-                     display: false
+         // Simple Doughnut Chart
+         const doughnutCtx = document.getElementById('doughnutChart');
+         if (doughnutCtx) {
+             new Chart(doughnutCtx.getContext('2d'), {
+                 type: 'doughnut',
+                 data: {
+                     labels: ['Organik', 'Anorganik', 'B3'],
+                     datasets: [{
+                         data: [70, 20, 10],
+                         backgroundColor: ['#10b981', '#3b82f6', '#f59e0b']
+                     }]
+                 },
+                 options: {
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     plugins: { legend: { display: false } }
                  }
-             }
+             });
          }
-     });
 
-     // Line Chart - Tren Keuangan 30 Hari
-     const lineCtx = document.getElementById('lineChart').getContext('2d');
-     const lineChart = new Chart(lineCtx, {
-         type: 'line',
-         data: {
-             labels: Array.from({length: 30}, (_, i) => i + 1),
-             datasets: [{
-                 label: 'Pemasukan',
-                 data: Array.from({length: 30}, () => Math.floor(Math.random() * 50000) + 10000),
-                 borderColor: 'rgba(16, 185, 129, 1)',
-                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                 tension: 0.4,
-                 fill: true
-             }, {
-                 label: 'Pengeluaran',
-                 data: Array.from({length: 30}, () => Math.floor(Math.random() * 20000) + 5000),
-                 borderColor: 'rgba(239, 68, 68, 1)',
-                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                 tension: 0.4,
-                 fill: true
-             }]
-         },
-         options: {
-             responsive: true,
-             maintainAspectRatio: false,
-             plugins: {
-                 legend: {
-                     display: true,
-                     position: 'top'
+         // Simple Line Chart
+         const lineCtx = document.getElementById('lineChart');
+         if (lineCtx) {
+             new Chart(lineCtx.getContext('2d'), {
+                 type: 'line',
+                 data: {
+                     labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                     datasets: [{
+                         label: 'Pemasukan',
+                         data: [15000, 22000, 18000, 25000, 30000, 35000, 40000, 45000, 50000, 55000],
+                         borderColor: '#10b981',
+                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                         fill: true
+                     }]
+                 },
+                 options: {
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     plugins: { legend: { display: true } }
                  }
-             },
-             scales: {
-                 y: {
-                     beginAtZero: true,
-                     ticks: {
-                         callback: function(value) {
-                             return 'Rp' + value.toLocaleString();
-                         }
-                     }
-                 }
-             }
+             });
          }
-     });
+     } catch (error) {
+         console.error('Chart error:', error);
+     }
  });
 
  // Function implementations
- function exportData() {
-     alert('Mengunduh data keuangan...');
-     // Implement actual export functionality
+ function exportToExcel() {
+     try {
+         // Create workbook and worksheet
+         const workbook = XLSX.utils.book_new();
+         
+         // Simple approach - just use pemasukan data
+         let data = [];
+     
+         data = [
+             ['No. Invoice', 'Tanggal', 'Sumber', 'Jenis Transaksi', 'Kategori', 'Harga (Rp)', 'Koin', 'Status'],
+             ['1#TOP3', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '50,000', '50', 'Selesai'],
+             ['1#TOP4', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '60,000', '60', 'Selesai'],
+             ['1#TOP5', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '70,000', '70', 'Selesai'],
+             ['1#TOP6', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '80,000', '80', 'Selesai'],
+             ['1#TOP7', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '90,000', '90', 'Selesai'],
+             ['1#TOP8', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '100,000', '100', 'Selesai'],
+             ['1#TOP9', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '110,000', '110', 'Selesai'],
+             ['1#TOP10', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '120,000', '120', 'Selesai']
+         ];
+         
+         const worksheet = XLSX.utils.aoa_to_sheet(data);
+         XLSX.utils.book_append_sheet(workbook, worksheet, 'Pemasukan');
+         
+         const fileName = `riwayat_pemasukan_${new Date().toISOString().split('T')[0]}.xlsx`;
+         XLSX.writeFile(workbook, fileName);
+         
+         alert(`Data berhasil diexport ke ${fileName}`);
+     } catch (error) {
+         console.error('Export error:', error);
+         alert('Error saat export data');
+     }
  }
 
  function showFilterModal() {
@@ -680,38 +724,137 @@
  }
 
  function applyFilter() {
-     alert('Filter diterapkan!');
+     const tanggal = document.getElementById('filterTanggal').value;
+     const kategori = document.getElementById('filterKategori').value;
+     const status = document.getElementById('filterStatus').value;
+     
+     console.log('Filter applied:', { tanggal, kategori, status });
+     
+     // Simulate filtering
+     const rows = document.querySelectorAll('tbody tr');
+     rows.forEach(row => {
+         let show = true;
+         
+         // Filter by date (if selected)
+         if (tanggal) {
+             const rowDate = row.querySelector('td:nth-child(2)').textContent;
+             if (rowDate !== tanggal) show = false;
+         }
+         
+         // Filter by category (if selected)
+         if (kategori && show) {
+             const rowCategory = row.querySelector('td:nth-child(5) span').textContent;
+             if (rowCategory !== kategori) show = false;
+         }
+         
+         // Filter by status (if selected)
+         if (status && show) {
+             const rowStatus = row.querySelector('td:nth-child(8) span').textContent;
+             if (rowStatus !== status) show = false;
+         }
+         
+         row.style.display = show ? '' : 'none';
+     });
+     
+     alert('Filter berhasil diterapkan!');
      hideFilterModal();
  }
 
  function resetFilter() {
-     alert('Filter direset!');
+     // Reset form
+     document.getElementById('filterTanggal').value = '';
+     document.getElementById('filterKategori').value = '';
+     document.getElementById('filterStatus').value = '';
+     
+     // Show all rows
+     const rows = document.querySelectorAll('tbody tr');
+     rows.forEach(row => {
+         row.style.display = '';
+     });
+     
+     alert('Filter berhasil direset!');
      hideFilterModal();
  }
 
  function viewTransaction(id) {
-     const details = {
-         '3': { invoice: '1#TEK123', date: '16/06/25', buyer: 'Wugis', product: 'T#Tas Kreasi', amount: 'Rp20.000', status: 'Selesai' },
-         '4': { invoice: '1#TEK124', date: '16/06/25', buyer: 'BS', product: 'TopUp Coin', amount: 'Rp25.000', status: 'Selesai' },
-         '5': { invoice: '1#TEK125', date: '16/06/25', buyer: 'Wugis', product: 'T#Tas Kreasi', amount: 'Rp30.000', status: 'Selesai' },
-         '6': { invoice: '1#TEK126', date: '16/06/25', buyer: 'BS', product: 'TopUp Coin', amount: 'Rp35.000', status: 'Selesai' },
-         '7': { invoice: '1#TEK127', date: '16/06/25', buyer: 'Wugis', product: 'T#Tas Kreasi', amount: 'Rp40.000', status: 'Selesai' },
-         '8': { invoice: '1#TEK128', date: '16/06/25', buyer: 'BS', product: 'TopUp Coin', amount: 'Rp45.000', status: 'Selesai' },
-         '9': { invoice: '1#TEK129', date: '16/06/25', buyer: 'Wugis', product: 'T#Tas Kreasi', amount: 'Rp50.000', status: 'Selesai' },
-         '10': { invoice: '1#TEK1210', date: '16/06/25', buyer: 'BS', product: 'TopUp Coin', amount: 'Rp55.000', status: 'Selesai' }
-     };
+     console.log('viewTransaction called with ID:', id);
+     
+     // Simple approach - just use default
+     let currentTab = 'pemasukan';
+     let details = {};
+     
+     if (currentTab === 'pemasukan') {
+         details = {
+             '3': { invoice: '1#TOP3', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp50.000', point: '50', status: 'Selesai' },
+             '4': { invoice: '1#TOP4', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp60.000', point: '60', status: 'Selesai' },
+             '5': { invoice: '1#TOP5', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp70.000', point: '70', status: 'Selesai' },
+             '6': { invoice: '1#TOP6', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp80.000', point: '80', status: 'Selesai' },
+             '7': { invoice: '1#TOP7', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp90.000', point: '90', status: 'Selesai' },
+             '8': { invoice: '1#TOP8', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp100.000', point: '100', status: 'Selesai' },
+             '9': { invoice: '1#TOP9', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp110.000', point: '110', status: 'Selesai' },
+             '10': { invoice: '1#TOP10', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp120.000', point: '120', status: 'Selesai' }
+         };
+     } else {
+         details = {
+             '3': { invoice: '1#BELI3', date: '16/06/25', buyer: 'Wugis', type: 'Sampah Organik', amount: 'Rp10.000', point: '10', status: 'Selesai' },
+             '4': { invoice: '1#BELI4', date: '16/06/25', buyer: 'BS', type: 'Sampah Anorganik', amount: 'Rp15.000', point: '15', status: 'Selesai' },
+             '5': { invoice: '1#BELI5', date: '16/06/25', buyer: 'Wugis', type: 'Sampah B3', amount: 'Rp20.000', point: '20', status: 'Selesai' },
+             '6': { invoice: '1#BELI6', date: '16/06/25', buyer: 'BS', type: 'Sampah Organik', amount: 'Rp25.000', point: '25', status: 'Selesai' },
+             '7': { invoice: '1#BELI7', date: '16/06/25', buyer: 'Wugis', type: 'Sampah Anorganik', amount: 'Rp30.000', point: '30', status: 'Selesai' },
+             '8': { invoice: '1#BELI8', date: '16/06/25', buyer: 'BS', type: 'Sampah B3', amount: 'Rp35.000', point: '35', status: 'Selesai' },
+             '9': { invoice: '1#BELI9', date: '16/06/25', buyer: 'Wugis', type: 'Sampah Organik', amount: 'Rp40.000', point: '40', status: 'Selesai' },
+             '10': { invoice: '1#BELI10', date: '16/06/25', buyer: 'BS', type: 'Sampah Anorganik', amount: 'Rp45.000', point: '45', status: 'Selesai' }
+         };
+     }
      
      const transaction = details[id];
      if (transaction) {
-         document.getElementById('transactionDetails').innerHTML = `
-             <div><strong>No. Invoice:</strong> ${transaction.invoice}</div>
-             <div><strong>Tanggal:</strong> ${transaction.date}</div>
-             <div><strong>Pembeli:</strong> ${transaction.buyer}</div>
-             <div><strong>Produk:</strong> ${transaction.product}</div>
-             <div><strong>Jumlah:</strong> ${transaction.amount}</div>
-             <div><strong>Status:</strong> <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">${transaction.status}</span></div>
-         `;
-         document.getElementById('transactionModal').classList.remove('hidden');
+         const label1 = currentTab === 'pemasukan' ? 'Sumber' : 'Pembeli';
+         const label2 = currentTab === 'pemasukan' ? 'Jenis Transaksi' : 'Jenis Sampah';
+         const value1 = currentTab === 'pemasukan' ? transaction.source : transaction.buyer;
+         const value2 = currentTab === 'pemasukan' ? transaction.type : transaction.type;
+         
+         const modal = document.getElementById('transactionModal');
+         const detailsElement = document.getElementById('transactionDetails');
+         
+         if (modal && detailsElement) {
+             detailsElement.innerHTML = `
+                 <div class="space-y-3">
+                     <div class="flex justify-between">
+                         <span class="font-medium text-gray-700">No. Invoice:</span>
+                         <span class="font-semibold">${transaction.invoice}</span>
+                     </div>
+                     <div class="flex justify-between">
+                         <span class="font-medium text-gray-700">Tanggal:</span>
+                         <span class="font-semibold">${transaction.date}</span>
+                     </div>
+                     <div class="flex justify-between">
+                         <span class="font-medium text-gray-700">${label1}:</span>
+                         <span class="font-semibold">${value1}</span>
+                     </div>
+                     <div class="flex justify-between">
+                         <span class="font-medium text-gray-700">${label2}:</span>
+                         <span class="font-semibold">${value2}</span>
+                     </div>
+                     <div class="flex justify-between">
+                         <span class="font-medium text-gray-700">Jumlah:</span>
+                         <span class="font-semibold text-green-600">${transaction.amount} (${transaction.point} Koin)</span>
+                     </div>
+                     <div class="flex justify-between">
+                         <span class="font-medium text-gray-700">Status:</span>
+                         <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">${transaction.status}</span>
+                     </div>
+                 </div>
+             `;
+             modal.classList.remove('hidden');
+             console.log('Modal opened successfully');
+         } else {
+             console.error('Modal elements not found');
+             alert('Error: Modal tidak ditemukan');
+         }
+     } else {
+         console.error('Transaction not found for ID:', id, 'Current tab:', currentTab);
+         alert('Error: Transaksi tidak ditemukan');
      }
  }
 

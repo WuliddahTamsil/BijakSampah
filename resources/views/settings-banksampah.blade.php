@@ -33,16 +33,10 @@
     }
     .settings-card {
         background: var(--bg-primary) !important;
-        border-radius: 16px;
-        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         border: 1px solid var(--border-primary) !important;
         color: var(--text-primary) !important;
-        transition: all 0.3s ease;
-    }
-    
-    .settings-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.15), 0 6px 15px -3px rgba(0, 0, 0, 0.08);
     }
     .fixed-header {
         position: fixed;
@@ -61,42 +55,14 @@
     .toggle-switch {
         position: relative;
         display: inline-block;
-        width: 56px;
-        height: 28px;
+        width: 50px;
+        height: 24px;
     }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .slider { 
-        position: absolute; 
-        cursor: pointer; 
-        top: 0; 
-        left: 0; 
-        right: 0; 
-        bottom: 0; 
-        background-color: #e5e7eb; 
-        transition: .3s ease; 
-        border-radius: 28px;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .slider:before { 
-        position: absolute; 
-        content: ""; 
-        height: 20px; 
-        width: 20px; 
-        left: 4px; 
-        bottom: 4px; 
-        background-color: white; 
-        transition: .3s ease; 
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    input:checked + .slider { 
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    input:checked + .slider:before { 
-        transform: translateX(28px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--success); }
+    input:checked + .slider:before { transform: translateX(26px); }
     
     /* Dark theme overrides for settings page */
     .dark .text-gray-900 { color: var(--text-primary) !important; }
@@ -115,11 +81,26 @@
     .border-gray-300 { border-color: var(--border-secondary) !important; }
     .bg-gray-50 { background-color: var(--bg-secondary) !important; }
     .bg-white { background-color: var(--bg-primary) !important; }
+    
+    /* Memastikan teks sidebar konsisten */
+    .sidebar-nav-item span,
+    .sidebar-item-hover span {
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Memastikan tidak ada font-weight yang diwarisi */
+    .sidebar-nav-item,
+    .sidebar-item-hover {
+        font-weight: normal !important;
+    }
 </style>
+
 <div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="settingsApp()" x-init="init()">
     {{-- Sidebar --}}
     <aside
-        x-data="{ open: false, active: 'settings' }"
+        x-data="{ open: false, active: 'settings-banksampah' }"
         x-ref="sidebar"
         @mouseenter="open = true; $root.sidebarOpen = true"
         @mouseleave="open = false; $root.sidebarOpen = false"
@@ -137,57 +118,67 @@
             {{-- Navigation Menu --}}
             <nav class="flex flex-col gap-2 w-full flex-1">
                 {{-- Dashboard Link --}}
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 p-3 font-medium sidebar-nav-item whitespace-nowrap w-full" :class="open ? (active === 'dashboard' ? 'active text-white' : 'text-white') : (active === 'dashboard' ? 'active text-white justify-center' : 'text-white justify-center')">
+                <a href="{{ route('dashboard-banksampah') }}" class="flex items-center gap-3 p-3 font-medium sidebar-nav-item whitespace-nowrap w-full" :class="open ? (active === 'dashboard-banksampah' ? 'active text-white' : 'text-white') : (active === 'dashboard-banksampah' ? 'active text-white justify-center' : 'text-white justify-center')">
                     <i class="fas fa-home text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Dashboard</span>
+                    <span x-show="open" class="text-xs font-medium">Dashboard</span>
                 </a>
                 
-                {{-- Bank Sampah Link --}}
-                <a href="{{ route('bank-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'bank-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'bank-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-tachometer-alt text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Bank Sampah</span>
-                </a>
-                
-                {{-- Toko Link --}}
-                <a href="{{ route('toko') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'toko' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'toko' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-store text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Toko</span>
-                </a>
-                
-                {{-- Komunitas Link --}}
-                <a href="{{ route('komunitas') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'komunitas' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'komunitas' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                {{-- Nasabah Section --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'nasabah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'nasabah' ? '' : 'nasabah'">
                     <i class="fas fa-users text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Komunitas</span>
+                    <span x-show="open" class="text-xs font-medium">Nasabah</span>
+                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'nasabah' ? 'rotate-180' : ''"></i>
+                </div>
+                
+                {{-- Sub-menu Nasabah --}}
+                <div x-show="open && active === 'nasabah'" x-transition class="ml-4 space-y-1">
+                    <a href="{{ route('verifikasi-nasabah') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'verifikasi-nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                        <i class="fas fa-user-check text-sm"></i>
+                        <span class="text-xs font-medium">Verifikasi Nasabah</span>
+                    </a>
+                    <a href="{{ route('data-nasabah-banksampah') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'data-nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                        <i class="fas fa-database text-sm"></i>
+                        <span class="text-xs font-medium">Data Nasabah</span>
+                    </a>
+                </div>
+                
+                {{-- Penjemputan Sampah Link --}}
+                <a href="{{ route('penjemputan-sampah-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'penjemputan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjemputan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-truck text-lg"></i>
+                    <span x-show="open" class="text-xs font-medium">Penjemputan Sampah</span>
                 </a>
                 
-                {{-- Berita Link --}}
-                <a href="{{ route('berita') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'berita' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'berita' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-newspaper text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Berita</span>
+                {{-- Penimbangan Section --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'penimbangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penimbangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'penimbangan' ? '' : 'penimbangan'">
+                    <i class="fas fa-weight-hanging text-lg"></i>
+                    <span x-show="open" class="text-xs font-medium">Penimbangan</span>
+                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'penimbangan' ? 'rotate-180' : ''"></i>
+                </div>
+                
+                {{-- Sub-menu Penimbangan --}}
+                <div x-show="open && active === 'penimbangan'" x-transition class="ml-4 space-y-1">
+                    <a href="{{ route('input-setoran') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'input-setoran' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                        <i class="fas fa-plus-circle text-sm"></i>
+                        <span class="text-xs font-medium">Input Setoran</span>
+                    </a>
+                </div>
+                
+                {{-- Data Sampah Link --}}
+                <a href="{{ route('data-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'data-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'data-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-trash-alt text-lg"></i>
+                    <span x-show="open" class="text-xs font-medium">Data Sampah</span>
                 </a>
                 
-                {{-- Keuangan Link --}}
-                <a href="{{ route('keuangan') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'keuangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'keuangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-file-invoice-dollar text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Keuangan</span>
-                </a>
-                
-                {{-- Pesan Link --}}
-                <a href="{{ route('chat') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'chat' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'pesan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-comment-dots text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Pesan</span>
-                </a>
-                
-                {{-- Umpan Balik Link --}}
-                <a href="{{ route('feedback') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'feedback' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'umpan-balik' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-info-circle text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Umpan Balik</span>
+                {{-- Penjualan Sampah Link --}}
+                <a href="{{ route('penjualan-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'penjualan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjualan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    <span x-show="open" class="text-xs font-medium">Penjualan Sampah</span>
                 </a>
                 
                 {{-- Settings Link --}}
-                <a href="{{ route('settings') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'settings' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'settings' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                <a href="{{ route('settings-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full active" :class="open ? (active === 'settings-banksampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'settings-banksampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-cog text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Settings</span>
+                    <span x-show="open" class="text-xs font-medium">Setting</span>
                 </a>
             </nav>
             
@@ -195,18 +186,23 @@
             <div class="w-full flex items-center py-3 mt-auto">
                 <a href="{{ route('logout') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover text-white hover:text-red-300 transition-all duration-200 w-full whitespace-nowrap" :class="open ? (active === 'logout' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'logout' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-sign-out-alt text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Logout</span>
+                    <span x-show="open" class="text-xs font-medium">Logout</span>
                 </a>
             </div>
         </div>
     </aside>
-         {{-- Main Content Area --}}
-     <div class="flex-1 min-h-screen" style="background-color: var(--bg-primary);" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.3s cubic-bezier(0.4,0,0.2,1);'">
+
+    {{-- Main Content Area --}}
+    <div class="flex-1 min-h-screen" style="background-color: var(--bg-primary);" :style="'padding-left: 4rem; transition: padding-left 0.3s cubic-bezier(0.4,0,0.2,1);'">
         {{-- Top Header Bar --}}
-        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + ';'">
-            <h1 class="text-white font-semibold text-lg">BijakSampah</h1>
+        <div class="fixed-header" :style="'padding-left: 4rem;'">
             <div class="flex items-center gap-4">
-                <a href="{{ route('notifikasi') }}" class="relative">
+                <div>
+                    <h1 class="text-white font-semibold text-lg">BijakSampah</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="{{ route('notif-banksampah') }}" class="relative">
                     <i class="far fa-bell text-white text-sm"></i>
                     <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">2</span>
                 </a>
@@ -214,13 +210,14 @@
                     <i class="fas fa-search text-white text-sm"></i>
                 </button>
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('profile') }}" class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border-2 border-gray-300">
+                    <a href="{{ route('profile-banksampah') }}" class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border-2 border-white/20">
                         <img src="{{ asset('asset/img/user_profile.jpg') }}" alt="Profile" class="w-full h-full object-cover">
                     </a>
                     <i class="fas fa-chevron-down text-white text-xs"></i>
                 </div>
             </div>
         </div>
+
         {{-- Main Content --}}
         <div class="p-8 w-full" style="padding-top: 60px;">
             {{-- Settings Title --}}
@@ -229,15 +226,15 @@
                 <p class="text-gray-600 mt-2" x-text="labels.settingsDesc"></p>
             </div>
             {{-- Settings Grid --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {{-- Account Settings --}}
                 <div class="settings-card p-6">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-user text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user text-blue-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="labels.account"></h3>
+                            <h3 class="text-lg font-semibold text-gray-900" x-text="labels.account"></h3>
                             <p class="text-sm text-gray-600" x-text="labels.accountDesc"></p>
                         </div>
                     </div>
@@ -272,11 +269,11 @@
                 {{-- Notification Settings --}}
                 <div class="settings-card p-6">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-bell text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-bell text-green-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="labels.notifications"></h3>
+                            <h3 class="text-lg font-semibold text-gray-900" x-text="labels.notifications"></h3>
                             <p class="text-sm text-gray-600" x-text="labels.notificationsDesc"></p>
                         </div>
                     </div>
@@ -316,11 +313,11 @@
                 {{-- Privacy Settings --}}
                 <div class="settings-card p-6">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-shield-alt text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-purple-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="labels.privacy"></h3>
+                            <h3 class="text-lg font-semibold text-gray-900" x-text="labels.privacy"></h3>
                             <p class="text-sm text-gray-600" x-text="labels.privacyDesc"></p>
                         </div>
                     </div>
@@ -361,11 +358,11 @@
                 {{-- Appearance Settings --}}
                 <div class="settings-card p-6">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-palette text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-palette text-orange-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="labels.appearance"></h3>
+                            <h3 class="text-lg font-semibold text-gray-900" x-text="labels.appearance"></h3>
                             <p class="text-sm text-gray-600" x-text="labels.appearanceDesc"></p>
                         </div>
                     </div>
@@ -381,7 +378,17 @@
                                 <option value="auto" x-text="labels.auto"></option>
                             </select>
                         </div>
-
+                        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+                            <div>
+                                <h4 class="font-medium text-gray-900" x-text="labels.language"></h4>
+                                <p class="text-sm text-gray-600" x-text="labels.languageDesc"></p>
+                            </div>
+                            <select x-model="settings.appearance.language" @change="applyLanguage();save()" class="text-sm border border-gray-300 rounded px-2 py-1">
+                                <option value="id">Indonesia</option>
+                                <option value="en">English</option>
+                                <option value="ja">日本語</option>
+                            </select>
+                        </div>
                         <div class="flex items-center justify-between py-3">
                             <div>
                                 <h4 class="font-medium text-gray-900" x-text="labels.fontSize"></h4>
@@ -398,11 +405,11 @@
                 {{-- Data & Storage --}}
                 <div class="settings-card p-6">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-database text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-database text-red-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="labels.data"></h3>
+                            <h3 class="text-lg font-semibold text-gray-900" x-text="labels.data"></h3>
                             <p class="text-sm text-gray-600" x-text="labels.dataDesc"></p>
                         </div>
                     </div>
@@ -439,11 +446,11 @@
                 {{-- Help & Support --}}
                 <div class="settings-card p-6">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-question-circle text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-question-circle text-yellow-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900" x-text="labels.help"></h3>
+                            <h3 class="text-lg font-semibold text-gray-900" x-text="labels.help"></h3>
                             <p class="text-sm text-gray-600" x-text="labels.helpDesc"></p>
                         </div>
                     </div>
@@ -472,73 +479,15 @@
                     </div>
                 </div>
             </div>
-            
-         
-            
             {{-- Password Modal --}}
-            <div x-show="showPasswordModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                <div class="bg-white rounded-2xl p-8 shadow-2xl w-full max-w-md transform transition-all duration-300 scale-95" 
-                     x-show="showPasswordModal" 
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 scale-95"
-                     x-transition:enter-end="opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-200"
-                     x-transition:leave-start="opacity-100 scale-100"
-                     x-transition:leave-end="opacity-0 scale-95">
-                    
-                    {{-- Header --}}
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-lock text-white text-lg"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-900" x-text="labels.changePassword"></h2>
-                            <p class="text-sm text-gray-600">Perbarui kata sandi akun Anda</p>
-                        </div>
-                    </div>
-                    
-                    {{-- Form --}}
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
-                            <div class="relative">
-                                <input type="password" x-model="passwordForm.new" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200" placeholder="Masukkan password baru">
-                                <button @click="togglePasswordVisibility('new')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                    <i class="fas" :class="passwordVisible.new ? 'fa-eye-slash' : 'fa-eye'"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
-                            <div class="relative">
-                                <input type="password" x-model="passwordForm.confirm" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200" placeholder="Konfirmasi password baru">
-                                <button @click="togglePasswordVisibility('confirm')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                    <i class="fas" :class="passwordVisible.confirm ? 'fa-eye-slash' : 'fa-eye'"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {{-- Password Strength Indicator --}}
-                    <div class="mt-4" x-show="passwordForm.new">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-sm font-medium text-gray-700">Kekuatan Password:</span>
-                            <span class="text-sm font-medium" :class="passwordStrength.color" x-text="passwordStrength.text"></span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="h-2 rounded-full transition-all duration-300" :class="passwordStrength.barColor" :style="'width: ' + passwordStrength.percentage + '%'"></div>
-                        </div>
-                    </div>
-                    
-                    {{-- Buttons --}}
-                    <div class="flex gap-3 mt-8">
-                        <button @click="closePasswordModal()" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium">
-                            <i class="fas fa-times mr-2"></i>Batal
-                        </button>
-                        <button @click="savePassword()" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-black rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium shadow-lg" :disabled="!isPasswordFormValid">
-                            <i class="fas fa-save mr-2"></i>Simpan Password
-                        </button>
+            <div x-show="showPasswordModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+                    <h2 class="text-lg font-semibold mb-4" x-text="labels.changePassword"></h2>
+                    <input type="password" class="w-full border rounded px-3 py-2 mb-3" placeholder="Password baru">
+                    <input type="password" class="w-full border rounded px-3 py-2 mb-3" placeholder="Konfirmasi password">
+                    <div class="flex justify-end gap-2">
+                        <button class="px-4 py-2 bg-gray-200 rounded" @click="showPasswordModal = false">Batal</button>
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded" @click="showPasswordModal = false; alert(labels.passwordChanged)">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -555,8 +504,8 @@
             </div>
         </div>
     </div>
-</div>
-<script>
+
+    <script>
 function settingsApp() {
     return {
         sidebarOpen: false,
@@ -574,7 +523,7 @@ function settingsApp() {
         settings: {
             notifications: { email: true, push: true, sms: false },
             privacy: { profileVisibility: 'public', dataSharing: true, locationSharing: false },
-            appearance: { theme: 'light', fontSize: 'medium' },
+            appearance: { theme: 'light', language: 'id', fontSize: 'medium' },
         },
         init() {
             // Load from localStorage
@@ -588,13 +537,19 @@ function settingsApp() {
             if (globalSettings) {
                 const global = JSON.parse(globalSettings);
                 this.settings.appearance.theme = global.theme || this.settings.appearance.theme;
+                this.settings.appearance.language = global.language || this.settings.appearance.language;
                 this.settings.appearance.fontSize = global.fontSize || this.settings.appearance.fontSize;
             }
             
             // Update labels based on current language
             this.updateLabels();
             
-
+            // Listen for language changes from other pages
+            window.addEventListener('languageChanged', (e) => {
+                console.log('Settings: Language changed event received:', e.detail.language);
+                this.settings.appearance.language = e.detail.language;
+                this.updateLabels();
+            });
             
             // Listen for font size changes from other pages
             window.addEventListener('fontSizeChanged', (e) => {
@@ -608,6 +563,7 @@ function settingsApp() {
             // Update global settings
             const globalSettings = {
                 theme: this.settings.appearance.theme,
+                language: this.settings.appearance.language,
                 fontSize: this.settings.appearance.fontSize
             };
             localStorage.setItem('globalSettings', JSON.stringify(globalSettings));
@@ -700,165 +656,8 @@ function settingsApp() {
             alert('Akun berhasil dihapus!');
             location.reload();
         },
-        
-        saveAllSettings() {
-            this.save();
-            this.applyTheme();
-            this.applyFontSize();
-            this.applyLanguage();
-            
-            // Show success message
-            this.showSuccessMessage();
-        },
-        
-        resetSettings() {
-            if (confirm('Apakah Anda yakin ingin mereset semua pengaturan ke default?')) {
-                this.settings = {
-                    notifications: { email: true, push: true, sms: false },
-                    privacy: { profileVisibility: 'public', dataSharing: true, locationSharing: false },
-                    appearance: { theme: 'light', language: 'id', fontSize: 'medium' },
-                };
-                this.saveAllSettings();
-                this.updateLabels();
-            }
-        },
-        
-        showSuccessMessage() {
-            // Create success notification
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full';
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    <span>Pengaturan berhasil disimpan!</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.classList.remove('translate-x-full');
-            }, 100);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notification.classList.add('translate-x-full');
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        },
-        
-        // Password Modal Functions
-        passwordForm: {
-            new: '',
-            confirm: ''
-        },
-        passwordVisible: {
-            new: false,
-            confirm: false
-        },
-        
-        get passwordStrength() {
-            const password = this.passwordForm.new;
-            if (!password) return { text: '', color: '', barColor: '', percentage: 0 };
-            
-            let score = 0;
-            let feedback = [];
-            
-            // Length check
-            if (password.length >= 8) score += 25;
-            if (password.length >= 12) score += 25;
-            
-            // Character variety checks
-            if (/[a-z]/.test(password)) score += 15;
-            if (/[A-Z]/.test(password)) score += 15;
-            if (/[0-9]/.test(password)) score += 15;
-            if (/[^A-Za-z0-9]/.test(password)) score += 15;
-            
-            // Determine strength level
-            let text, color, barColor;
-            if (score < 30) {
-                text = 'Lemah';
-                color = 'text-red-500';
-                barColor = 'bg-red-500';
-            } else if (score < 60) {
-                text = 'Sedang';
-                color = 'text-yellow-500';
-                barColor = 'bg-yellow-500';
-            } else if (score < 90) {
-                text = 'Kuat';
-                color = 'text-blue-500';
-                barColor = 'bg-blue-500';
-            } else {
-                text = 'Sangat Kuat';
-                color = 'text-green-500';
-                barColor = 'bg-green-500';
-            }
-            
-            return { text, color, barColor, percentage: Math.min(score, 100) };
-        },
-        
-        get isPasswordFormValid() {
-            return this.passwordForm.new && 
-                   this.passwordForm.confirm && 
-                   this.passwordForm.new === this.passwordForm.confirm &&
-                   this.passwordForm.new.length >= 8;
-        },
-        
-        togglePasswordVisibility(field) {
-            this.passwordVisible[field] = !this.passwordVisible[field];
-            const input = document.querySelector(`input[x-model="passwordForm.${field}"]`);
-            if (input) {
-                input.type = this.passwordVisible[field] ? 'text' : 'password';
-            }
-        },
-        
-        closePasswordModal() {
-            this.showPasswordModal = false;
-            // Reset form
-            this.passwordForm = { new: '', confirm: '' };
-            this.passwordVisible = { new: false, confirm: false };
-        },
-        
-        savePassword() {
-            if (!this.isPasswordFormValid) {
-                alert('Mohon lengkapi password baru dan konfirmasi password!');
-                return;
-            }
-            
-            // Simulate password change
-            this.showPasswordSuccess();
-            this.closePasswordModal();
-        },
-        
-        showPasswordSuccess() {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full';
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    <span>Password berhasil diubah!</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.classList.remove('translate-x-full');
-            }, 100);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notification.classList.add('translate-x-full');
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        },
     };
 }
-</script>
+    </script>
+</div>
 @endsection 

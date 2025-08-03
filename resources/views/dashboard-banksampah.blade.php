@@ -1,765 +1,829 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Nasabah - Bijak Sampah</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+@extends('layouts.app')
 
-        body {
-            background-color: #f8f9fc;
-            display: flex;
-            min-height: 100vh;
-        }
+@section('content')
+<style>
+    html, body {
+        overflow-x: hidden;
+    }
+    .sidebar-gradient {
+        background: var(--sidebar-gradient);
+    }
+    .sidebar-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar-item-hover {
+        transition: all 0.2s ease-in-out;
+    }
+    .sidebar-item-hover:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    .sidebar-logo {
+        transition: all 0.3s ease-in-out;
+    }
+    .sidebar-nav-item {
+        transition: all 0.2s ease-in-out;
+        border-radius: 8px;
+    }
+    .sidebar-nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    .sidebar-nav-item.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .fixed-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48px;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 1.5rem;
+        background: var(--sidebar-gradient) !important;
+        transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Notifikasi Cards - Diperbagus */
+    .notif-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
 
-        /* Sidebar yang diperbaiki */
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, #75E6DA 0%, #05445E 30%, #05445E 100%);
-            color: white;
-            padding: 20px 0;
-            min-height: 100vh;
-            transition: width 0.3s;
-            position: fixed;
-            left: 0;
-            top: 0;
-            overflow: hidden;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-        }
+    .card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
 
-        .sidebar.collapsed {
-            width: 80px;
-        }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
 
-        .logo-container {
-            padding: 0 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            height: 60px;
-            justify-content: space-between;
-            flex-shrink: 0;
-        }
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #75E6DA, #05445E);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: white;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .card:hover::before {
+        opacity: 1;
+    }
 
-        .logo span {
-            color: #4ADE80;
-        }
+    .card h4 {
+        color: #0a3a60;
+        font-weight: 600;
+        font-size: 17px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-        .toggle-collapse {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 5px;
-            min-width: 24px;
-        }
+    .card h4 i {
+        color: #05445E;
+        font-size: 20px;
+    }
 
-        .menu-container {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding-bottom: 20px;
-        }
+    .card p {
+        font-size: 15px;
+        color: #555;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
 
-        .menu-items {
-            list-style: none;
-        }
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #777;
+    }
 
-        .menu-item {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-            position: relative;
-        }
+    .card-actions {
+        display: flex;
+        gap: 10px;
+    }
 
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+    .card-btn {
+        background: none;
+        border: none;
+        color: #05445E;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
 
-        .menu-item.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-left: 4px solid #f16728;
-        }
+    .card-btn:hover {
+        background: rgba(5, 68, 94, 0.1);
+    }
 
-        .sub-menu-item {
-            padding: 10px 20px 10px 50px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-            font-size: 14px;
-            position: relative;
-        }
+    .card-btn.delete:hover {
+        color: #FF5A5F;
+    }
 
-        .sub-menu-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+    /* Grafik dengan Animasi */
+    .chart-section {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
 
-        .sub-menu-item.active {
-            background: rgba(255, 255, 255, 0.15);
-        }
+    .chart-title {
+        color: #0a3a60;
+        font-weight: 700;
+        font-size: 22px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-        .menu-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+    .chart-title i {
+        color: #05445E;
+        font-size: 24px;
+    }
 
-        .menu-text {
-            font-size: 15px;
-            transition: opacity 0.3s;
-        }
+    .chart-sub {
+        font-size: 15px;
+        color: #777;
+        margin-bottom: 30px;
+    }
+    
+    .chart-content {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        position: relative;
+        height: 220px;
+        padding-top: 40px;
+        padding-bottom: 30px;
+    }
 
-        .sidebar.collapsed .menu-text,
-        .sidebar.collapsed .sub-menu-item {
-            opacity: 0;
-            width: 0;
-            height: 0;
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-        }
+    .chart-content::before {
+        content: '';
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #eee;
+    }
 
-        .sidebar.collapsed .logo-text {
-            display: none;
-        }
+    .chart-bar-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
+        position: relative;
+        height: var(--height);
+        transition: height 0.3s ease;
+    }
 
-        .sidebar.collapsed .logo-icon {
-            font-size: 22px;
-        }
+    .bar {
+        width: 100%;
+        max-width: 50px;
+        background: linear-gradient(to top, #05445E, #189AB4);
+        border-radius: 8px 8px 0 0;
+        position: relative;
+        height: 100%;
+        transform: scaleY(0);
+        transform-origin: bottom;
+        animation: grow-scale 1.5s ease-out forwards;
+        animation-delay: calc(var(--order) * 0.2s);
+    }
 
-        .sidebar-footer {
-            padding: 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: auto;
-            flex-shrink: 0;
-        }
+    @keyframes grow-scale {
+        from { transform: scaleY(0); }
+        to { transform: scaleY(1); }
+    }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            padding: 30px;
-            transition: margin-left 0.3s, width 0.3s;
-        }
+    .bar-label {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 13px;
+        font-weight: 600;
+        background: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        white-space: nowrap;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+        animation-delay: calc(var(--order) * 0.2s + 1s);
+        color: #05445E;
+    }
 
-        .sidebar.collapsed ~ .main-content {
-            margin-left: 80px;
-            width: calc(100% - 80px);
-        }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    
+    .day {
+        position: absolute;
+        bottom: -40px;
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+        color: #555;
+    }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            padding: 30px;
-            transition: margin-left 0.3s, width 0.3s;
-        }
+    /* Modal untuk CRUD */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
 
-        .sidebar.collapsed ~ .main-content {
-            margin-left: 80px;
-            width: calc(100% - 80px);
-        }
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        animation: modalFadeIn 0.3s ease-out;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+    @keyframes modalFadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-        .page-title {
-            font-size: 28px;
-            color: #0A3A60;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-        .profile-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+    .modal-title {
+        font-size: 22px;
+        color: #05445E;
+        font-weight: 700;
+    }
 
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s;
-        }
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #777;
+        transition: all 0.2s;
+    }
 
-        .profile-icon:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
+    .close-modal:hover {
+        color: #05445E;
+        transform: rotate(90deg);
+    }
 
-        .profile-icon.notif::after {
-            content: '';
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 8px;
-            height: 8px;
-            background: #FF5A5F;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
+    .modal-body {
+        margin-bottom: 25px;
+    }
 
-        .profile-icon i {
-            color: #05445E;
-            font-size: 18px;
-        }
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #05445E;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #555;
+    }
 
-        .avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(5, 68, 94, 0.2);
-        }
+    .form-group input, 
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s;
+    }
 
-        /* Notifikasi Cards - Diperbagus */
+    .form-group input:focus, 
+    .form-group textarea:focus {
+        border-color: #75E6DA;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(117, 230, 218, 0.2);
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #05445E 0%, #0A3A60 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0A3A60 0%, #05445E 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(5, 68, 94, 0.3);
+    }
+
+    .btn-outline {
+        background: white;
+        border: 1px solid #ddd;
+        color: #555;
+    }
+
+    .btn-outline:hover {
+        background: #f5f5f5;
+    }
+
+    .btn-danger {
+        background: #FF5A5F;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #e04a50;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .footer strong {
+        font-weight: 700;
+        color: #05445E;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
         .notif-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         }
+    }
 
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-            position: relative;
-            overflow: hidden;
+    @media (max-width: 768px) {
+        .notif-cards {
+            grid-template-columns: 1fr;
         }
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
+    /* Enhanced Dashboard Styles */
+    .stats-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #75E6DA, #05445E);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+    .stats-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e1;
+    }
 
-        .card:hover::before {
-            opacity: 1;
-        }
+    .activity-item {
+        transition: all 0.2s ease;
+    }
 
-        .card h4 {
-            color: #0a3a60;
-            font-weight: 600;
-            font-size: 17px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .activity-item:hover {
+        background-color: #f1f5f9;
+        transform: translateX(4px);
+    }
 
-        .card h4 i {
-            color: #05445E;
-            font-size: 20px;
-        }
+    .chart-container {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
 
-        .card p {
-            font-size: 15px;
-            color: #555;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
+    .chart-container:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
 
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: #777;
-        }
+    /* Animated progress bars */
+    .progress-bar {
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+    }
 
-        .card-actions {
-            display: flex;
-            gap: 10px;
-        }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+        border-radius: 2px;
+        transition: width 1s ease;
+        animation: progress-animation 2s ease-out;
+    }
 
-        .card-btn {
-            background: none;
-            border: none;
-            color: #05445E;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
+    @keyframes progress-animation {
+        from { width: 0%; }
+        to { width: var(--progress-width); }
+    }
 
-        .card-btn:hover {
-            background: rgba(5, 68, 94, 0.1);
-        }
+    /* Enhanced notifications */
+    .notification-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
 
-        .card-btn.delete:hover {
-            color: #FF5A5F;
-        }
+    .notification-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-        /* Grafik dengan Animasi */
-        .chart-section {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
+    .notification-card.urgent {
+        border-left-color: #ef4444;
+        background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+    }
 
-        .chart-title {
-            color: #0a3a60;
-            font-weight: 700;
-            font-size: 22px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    .notification-card.info {
+        border-left-color: #3b82f6;
+        background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    }
 
-        .chart-title i {
-            color: #05445E;
-            font-size: 24px;
-        }
+    .notification-card.success {
+        border-left-color: #10b981;
+        background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+    }
 
-        .chart-sub {
-            font-size: 15px;
-            color: #777;
-            margin-bottom: 30px;
-        }
-        
-        .chart-content {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            position: relative;
-            height: 220px;
-            padding-top: 40px;
-            padding-bottom: 30px;
-        }
+    /* Floating action button */
+    .fab {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
 
-        .chart-content::before {
-            content: '';
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #eee;
-        }
+    .fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+</style>
 
-        .chart-bar-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            min-width: 0;
-            position: relative;
-            height: var(--height); /* Tinggi item akan disesuaikan dengan data */
-            transition: height 0.3s ease;
-        }
-
-        .bar {
-            width: 100%;
-            max-width: 50px;
-            background: linear-gradient(to top, #05445E, #189AB4); /* Warna default untuk semua bar */
-            border-radius: 8px 8px 0 0;
-            position: relative;
-            height: 100%; /* Batang akan mengisi penuh tingginya */
-            transform: scaleY(0); /* Mulai dari nol */
-            transform-origin: bottom;
-            animation: grow-scale 1.5s ease-out forwards;
-            animation-delay: calc(var(--order) * 0.2s);
-        }
-
-        @keyframes grow-scale {
-            from { transform: scaleY(0); }
-            to { transform: scaleY(1); }
-        }
-
-        .bar-label {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 13px;
-            font-weight: 600;
-            background: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            white-space: nowrap;
-            opacity: 0;
-            animation: fadeIn 0.5s ease-out forwards;
-            animation-delay: calc(var(--order) * 0.2s + 1s);
-            color: #05445E; /* Warna label agar terlihat di atas bar */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        
-        .day {
-            position: absolute;
-            bottom: -40px; /* Nilai negatif untuk memposisikan lebih ke bawah dari batas parent */
-            width: 100%;
-            text-align: center;
-            font-size: 12px;
-            color: #555; /* Warna teks yang sedikit lebih gelap untuk kontras */
-        }
-
-        /* Modal untuk CRUD */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: modalFadeIn 0.3s ease-out;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 22px;
-            color: #05445E;
-            font-weight: 700;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #777;
-            transition: all 0.2s;
-        }
-
-        .close-modal:hover {
-            color: #05445E;
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-        }
-
-        .form-group input, 
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus, 
-        .form-group textarea:focus {
-            border-color: #75E6DA;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(117, 230, 218, 0.2);
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #05445E 0%, #0A3A60 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0A3A60 0%, #05445E 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 68, 94, 0.3);
-        }
-
-        .btn-outline {
-            background: white;
-            border: 1px solid #ddd;
-            color: #555;
-        }
-
-        .btn-outline:hover {
-            background: #f5f5f5;
-        }
-
-        .btn-danger {
-            background: #FF5A5F;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #e04a50;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .footer strong {
-            font-weight: 700;
-            color: #05445E;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .notif-cards {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 80px;
-            }
-            
-            .sidebar .menu-text,
-            .sidebar .logo-text {
-                display: none;
-            }
-            
-            .sidebar .logo-icon {
-                font-size: 22px;
-            }
-            
-            .main-content {
-                margin-left: 80px;
-                width: calc(100% - 80px);
-                padding: 20px;
-            }
-
-            .notif-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .profile-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="sidebar" id="sidebar">
-        <div class="logo-container">
-            <div class="logo">
-                <span class="logo-icon"><i class="fas fa-recycle"></i></span>
-                <span class="logo-text">Bijak<span>Sampah</span></span>
+<div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="bankSampahApp()" x-init="init()">
+    {{-- Sidebar --}}
+    <aside
+        x-data="{ open: false, active: 'dashboard-banksampah' }"
+        x-ref="sidebar"
+        @mouseenter="open = true; $root.sidebarOpen = true"
+        @mouseleave="open = false; $root.sidebarOpen = false"
+        class="fixed top-0 left-0 z-50 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
+        :class="open ? 'w-64' : 'w-16'"
+        style="transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 48px; height: calc(100vh - 48px);"
+    >
+        <div class="relative flex flex-col h-full w-full px-4">
+            {{-- Logo Section --}}
+            <div class="flex items-center justify-center mb-8 mt-2 sidebar-logo">
+                <div x-show="open" class="flex items-center justify-center">
+                    <img src="{{ asset('asset/img/logo.png') }}" alt="Logo" class="w-16 h-auto">
+                </div>
+                <div x-show="!open" class="flex items-center justify-center">
+                    <img src="{{ asset('asset/img/logo.png') }}" alt="Logo" class="w-6 h-6">
+                </div>
             </div>
-            <button class="toggle-collapse" id="toggleCollapse">
-                <i class="fas fa-chevron-left"></i>
-            </button>
+            
+            {{-- Navigation Menu --}}
+            <nav class="flex flex-col gap-2 w-full flex-1">
+                {{-- Dashboard Link --}}
+                <a href="{{ route('dashboard-banksampah') }}" class="flex items-center gap-3 p-3 font-medium sidebar-nav-item whitespace-nowrap w-full active" :class="open ? 'text-white' : 'text-white justify-center'">
+                    <i class="fas fa-home text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Dashboard</span>
+                </a>
+                
+                {{-- Nasabah Section --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'nasabah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'nasabah' ? '' : 'nasabah'">
+                    <i class="fas fa-users text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Nasabah</span>
+                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'nasabah' ? 'rotate-180' : ''"></i>
+                </div>
+                
+                {{-- Sub-menu Nasabah --}}
+                <div x-show="open && active === 'nasabah'" x-transition class="ml-4 space-y-1">
+                    <a href="{{ route('verifikasi-nasabah') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'verifikasi-nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                        <i class="fas fa-user-check text-sm"></i>
+                        <span class="text-xs font-medium">Verifikasi Nasabah</span>
+                    </a>
+                    <a href="{{ route('data-nasabah') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'data-nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                        <i class="fas fa-database text-sm"></i>
+                        <span class="text-xs font-medium">Data Nasabah</span>
+                    </a>
+                </div>
+                
+                {{-- Penjemputan Sampah Link --}}
+                <a href="{{ route('penjemputan-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'penjemputan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjemputan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-truck text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Penjemputan Sampah</span>
+                </a>
+                
+                {{-- Penimbangan Section --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'penimbangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penimbangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'penimbangan' ? '' : 'penimbangan'">
+                    <i class="fas fa-weight-hanging text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Penimbangan</span>
+                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'penimbangan' ? 'rotate-180' : ''"></i>
+                </div>
+                
+                {{-- Sub-menu Penimbangan --}}
+                <div x-show="open && active === 'penimbangan'" x-transition class="ml-4 space-y-1">
+                    <a href="{{ route('input-setoran') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'input-setoran' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                        <i class="fas fa-plus-circle text-sm"></i>
+                        <span class="text-xs font-medium">Input Setoran</span>
+                    </a>
+                </div>
+                
+                {{-- Data Sampah Link --}}
+                <a href="{{ route('data-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'data-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'data-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-trash-alt text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Data Sampah</span>
+                </a>
+                
+                {{-- Penjualan Sampah Link --}}
+                <a href="{{ route('penjualan-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'penjualan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjualan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Penjualan Sampah</span>
+                </a>
+                
+                {{-- Settings Link --}}
+                <a href="{{ route('settings-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'settings-banksampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'settings-banksampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-cog text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Setting</span>
+                </a>
+            </nav>
+            
+            {{-- Logout Section --}}
+            <div class="w-full flex items-center py-3 mt-auto">
+                <a href="{{ route('logout') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover text-white hover:text-red-300 transition-all duration-200 w-full whitespace-nowrap" :class="open ? (active === 'logout' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'logout' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                    <i class="fas fa-sign-out-alt text-lg"></i>
+                    <span x-show="open" class="text-sm font-medium">Logout</span>
+                </a>
+            </div>
         </div>
-        
-        <div class="menu-container">
-            <ul class="menu-items">
-                <li class="menu-item active">
-                    <div class="menu-icon"><i class="fas fa-home"></i></div>
-                    <span class="menu-text">Dashboard</span>
-                </li>
-                <li class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-users"></i></div>
-                    <span class="menu-text">Nasabah</span>
-                </li>
-                <li class="sub-menu-item">
-                    <div class="menu-icon"><i class="fas fa-user-check"></i></div>
-                    <span class="menu-text">Verifikasi Nasabah</span>
-                </li>
-                <li class="sub-menu-item">
-                    <div class="menu-icon"><i class="fas fa-database"></i></div>
-                    <span class="menu-text">Data Nasabah</span>
-                </li>
-                <li class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-truck"></i></div>
-                    <span class="menu-text">Penjemputan Sampah</span>
-                </li>
-                <li class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-weight-hanging"></i></div>
-                    <span class="menu-text">Penimbangan</span>
-                </li>
-                <li class="sub-menu-item">
-                    <div class="menu-icon"><i class="fas fa-plus-circle"></i></div>
-                    <span class="menu-text">Input Setoran</span>
-                </li>
-                <li class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-trash-alt"></i></div>
-                    <span class="menu-text">Data Sampah</span>
-                </li>
-                <li class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <span class="menu-text">Penjualan Sampah</span>
-                </li>
-                <li class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-cog"></i></div>
-                    <span class="menu-text">Setting</span>
-                </li>
-            </ul>
+    </aside>
+
+    {{-- Main Content Area --}}
+    <div class="flex-1 min-h-screen" style="background-color: var(--bg-primary);" :style="'padding-left: 4rem; transition: padding-left 0.3s cubic-bezier(0.4,0,0.2,1);'">
+        {{-- Top Header Bar --}}
+        <div class="fixed-header" :style="'padding-left: 4rem;'">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-white font-semibold text-lg">BijakSampah</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="{{ route('notif-banksampah') }}" class="relative">
+                    <i class="far fa-bell text-white text-sm"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">2</span>
+                </a>
+                <button class="focus:outline-none">
+                    <i class="fas fa-search text-white text-sm"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('profile-banksampah') }}" class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border-2 border-white/20">
+                        <img src="{{ asset('asset/img/user_profile.jpg') }}" alt="Profile" class="w-full h-full object-cover">
+                    </a>
+                    <i class="fas fa-chevron-down text-white text-xs"></i>
+                </div>
+            </div>
         </div>
 
-        <div class="sidebar-footer">
-            <div class="menu-item">
-                <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
-                <span class="menu-text">Logout</span>
+        {{-- Main Content --}}
+        <div class="p-8 w-full" style="padding-top: 60px;">
+            {{-- Dashboard Title --}}
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Bank Sampah</h1>
+                <p class="text-gray-600 mt-2">Aktivitas bank sampah</p>
+            </div>
+
+            {{-- Notifications Section --}}
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900">Notifikasi Terbaru</h2>
+                    <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Semua</button>
+                </div>
+                <div class="notif-cards" id="notifContainer">
+                    <!-- Notifikasi akan dimuat di sini -->
+                </div>
+            </div>
+
+            {{-- Quick Stats Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stats-card rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Nasabah</p>
+                            <p class="text-2xl font-bold text-gray-900">1,247</p>
+                            <p class="text-xs text-green-600 mt-1">+12% dari bulan lalu</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Sampah Hari Ini</p>
+                            <p class="text-2xl font-bold text-gray-900">156 kg</p>
+                            <p class="text-xs text-green-600 mt-1">+8% dari kemarin</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-weight-hanging text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Penjemputan</p>
+                            <p class="text-2xl font-bold text-gray-900">23</p>
+                            <p class="text-xs text-orange-600 mt-1">5 menunggu konfirmasi</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-truck text-orange-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Pendapatan</p>
+                            <p class="text-2xl font-bold text-gray-900">Rp 2.4M</p>
+                            <p class="text-xs text-green-600 mt-1">+15% dari bulan lalu</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-money-bill-wave text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Charts Section --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                {{-- Chart 1 --}}
+                <div class="chart-container rounded-xl shadow-sm p-6">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line"></i> Data Penimbangan Sampah
+                    </div>
+                    <div class="chart-sub">Minggu Lalu</div>
+
+                    <div class="chart-content" id="chart-content">
+                        <!-- Grafik akan dimuat di sini -->
+                    </div>
+                </div>
+
+                {{-- Chart 2 --}}
+                <div class="chart-container rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Top 5 Jenis Sampah</h3>
+                        <i class="fas fa-chart-pie text-gray-400"></i>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span class="text-sm text-gray-700">Plastik</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">45%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span class="text-sm text-gray-700">Kertas</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">28%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                <span class="text-sm text-gray-700">Logam</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">15%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <span class="text-sm text-gray-700">Kaca</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">8%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                <span class="text-sm text-gray-700">Lainnya</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">4%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Recent Activities --}}
+            <div class="chart-container rounded-xl shadow-sm p-6 mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
+                    <button class="text-sm text-blue-600 hover:text-blue-800 font-medium">Lihat Semua</button>
+                </div>
+                <div class="space-y-4">
+                    <div class="activity-item flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-plus text-green-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">Nasabah baru terdaftar</p>
+                            <p class="text-xs text-gray-500">Ahmad Fauzi - 2 menit yang lalu</p>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-truck text-blue-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">Penjemputan selesai</p>
+                            <p class="text-xs text-gray-500">Jl. Sudirman No. 45 - 15 menit yang lalu</p>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-weight-hanging text-orange-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">Penimbangan sampah</p>
+                            <p class="text-xs text-gray-500">25 kg plastik - 1 jam yang lalu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                Created by <strong>TEK(G)</strong> | All Right Reserved!
             </div>
         </div>
     </div>
 
-    
-    <div class="main-content">
-        <div class="header">
-            <h1 class="page-title"><i class="fas fa-bell"></i> Notifikasi</h1>
-            <div class="profile-actions">
-                <div class="profile-icon notif" id="notifBtn" title="Notifikasi">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <div class="profile-icon" id="searchBtn" title="Cari">
-                    <i class="fas fa-search"></i>
-                </div>
-                <img class="avatar" src="https://ui-avatars.com/api/?name=Nasabah&background=75E6DA&color=05445E" alt="Profile" id="profileBtn">
-            </div>
-        </div>
-
-        <div class="notif-cards" id="notifContainer">
-            <!-- Notifikasi akan dimuat di sini -->
-        </div>
-
-        <div class="chart-section">
-            <div class="chart-title">
-                <i class="fas fa-chart-line"></i> Data Penimbangan Sampah
-            </div>
-            <div class="chart-sub">Minggu Lalu</div>
-
-            <div class="chart-content" id="chart-content">
-                <!-- Grafik akan dimuat di sini -->
-            </div>
-        </div>
-
-        <div class="footer">
-            Created by <strong>TEK(G)</strong> | All Right Reserved!
-        </div>
+    {{-- Floating Action Button --}}
+    <div class="fab" title="Tambah Aktivitas">
+        <i class="fas fa-plus"></i>
     </div>
 
     <div class="modal" id="notifModal">
@@ -833,8 +897,19 @@
         </div>
     </div>
 
-
     <script>
+        function bankSampahApp() {
+            return {
+                sidebarOpen: false,
+                active: 'dashboard-banksampah',
+                
+                init() {
+                    // Initialize sidebar state
+                    this.sidebarOpen = false;
+                }
+            }
+        }
+
         // Data Notifikasi yang sudah diubah
         let notifications = [
             { 
@@ -875,15 +950,6 @@
         ];
 
         // DOM Elements
-        const sidebar = document.getElementById('sidebar');
-        const toggleCollapse = document.getElementById('toggleCollapse');
-        const mainContent = document.querySelector('.main-content');
-        const notifBtn = document.getElementById('notifBtn');
-        const searchBtn = document.getElementById('searchBtn');
-        const profileBtn = document.getElementById('profileBtn');
-        const notifModal = document.getElementById('notifModal');
-        const searchModal = document.getElementById('searchModal');
-        const profileModal = document.getElementById('profileModal');
         const notifContainer = document.getElementById('notifContainer');
         const notifList = document.getElementById('notifList');
         const notifInput = document.getElementById('notifInput');
@@ -894,26 +960,22 @@
         const saveProfile = document.getElementById('saveProfile');
         const chartContent = document.getElementById('chart-content');
 
-        // Toggle Sidebar
-        toggleCollapse.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('collapsed');
-            const icon = toggleCollapse.querySelector('i');
-            if (sidebar.classList.contains('collapsed')) {
-                icon.classList.remove('fa-chevron-left');
-                icon.classList.add('fa-chevron-right');
-            } else {
-                icon.classList.remove('fa-chevron-right');
-                icon.classList.add('fa-chevron-left');
-            }
-        });
-
         // Load Notifications
         function loadNotifications() {
             notifContainer.innerHTML = '';
             notifications.forEach(notif => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'card notification-card';
+                
+                // Add specific classes based on notification type
+                if (notif.title.includes('Sampah Penuh')) {
+                    card.classList.add('urgent');
+                } else if (notif.title.includes('UMKM')) {
+                    card.classList.add('info');
+                } else if (notif.title.includes('Penjemputan')) {
+                    card.classList.add('success');
+                }
+                
                 card.innerHTML = `
                     <h4><i class="${notif.icon}"></i> ${notif.title}</h4>
                     <p>${notif.message}</p>
@@ -964,18 +1026,15 @@
             const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
             
             const today = new Date();
-            const currentDay = today.getDay(); // 0 (Minggu), 1 (Senin), ..., 6 (Sabtu)
+            const currentDay = today.getDay();
 
-            // Hitung tanggal Senin pada minggu ini
             const daysSinceMonday = currentDay === 0 ? 6 : currentDay - 1;
             const thisMonday = new Date(today);
             thisMonday.setDate(today.getDate() - daysSinceMonday);
 
-            // Hitung tanggal Senin pada MINGGU SEBELUMNYA
             const lastMonday = new Date(thisMonday);
             lastMonday.setDate(thisMonday.getDate() - 7);
 
-            // Generate tanggal untuk 7 hari dari Senin hingga Minggu pada MINGGU LALU
             for (let i = 0; i < 7; i++) {
                 const date = new Date(lastMonday);
                 date.setDate(lastMonday.getDate() + i);
@@ -988,7 +1047,7 @@
                 const data = chartData[i];
                 const chartBarItem = document.createElement('div');
                 chartBarItem.className = 'chart-bar-item';
-                chartBarItem.style.setProperty('--height', `${data.height}%`); // Set tinggi item
+                chartBarItem.style.setProperty('--height', `${data.height}%`);
                 chartBarItem.innerHTML = `
                     <div class="bar" style="--order: ${i + 1};">
                         <span class="bar-label">${data.value}</span>
@@ -998,54 +1057,6 @@
                 chartContent.appendChild(chartBarItem);
             }
         }
-
-        // Modal Toggles
-        notifBtn.addEventListener('click', function() {
-            loadNotifModal();
-            notifModal.style.display = 'flex';
-        });
-
-        searchBtn.addEventListener('click', function() {
-            searchModal.style.display = 'flex';
-        });
-
-        profileBtn.addEventListener('click', function() {
-            profileModal.style.display = 'flex';
-        });
-
-        // Close Modals
-        document.getElementById('closeNotifModal').addEventListener('click', function() {
-            notifModal.style.display = 'none';
-        });
-
-        document.getElementById('closeSearchModal').addEventListener('click', function() {
-            searchModal.style.display = 'none';
-        });
-
-        document.getElementById('closeProfileModal').addEventListener('click', function() {
-            profileModal.style.display = 'none';
-        });
-
-        document.getElementById('cancelNotif').addEventListener('click', function() {
-            notifModal.style.display = 'none';
-        });
-
-        document.getElementById('cancelProfile').addEventListener('click', function() {
-            profileModal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target === notifModal) {
-                notifModal.style.display = 'none';
-            }
-            if (event.target === searchModal) {
-                searchModal.style.display = 'none';
-            }
-            if (event.target === profileModal) {
-                profileModal.style.display = 'none';
-            }
-        });
 
         // Add New Notification
         saveNotif.addEventListener('click', function() {
@@ -1082,7 +1093,6 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     profileImage.src = event.target.result;
-                    profileBtn.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -1090,14 +1100,13 @@
 
         // Save Profile Changes
         saveProfile.addEventListener('click', function() {
-            // In a real app, you would save to database here
             alert('Perubahan profil berhasil disimpan!');
-            profileModal.style.display = 'none';
+            document.getElementById('profileModal').style.display = 'none';
         });
 
         // Initialize
         loadNotifications();
         generateChart();
     </script>
-</body>
-</html>
+</div>
+@endsection

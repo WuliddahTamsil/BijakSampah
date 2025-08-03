@@ -501,7 +501,7 @@
                                 <div class="online-indicator absolute -bottom-1 -right-1"></div>
                             </div>
                             <div class="flex-1">
-                                <div class="font-bold text-white">BS Lodaya II</div>
+                                <div class="font-bold text-black">BS Lodaya II</div>
                                 <div class="text-white/80 text-xs">Baik Terima Kasih</div>
                             </div>
                             <div class="text-white/60 text-xs">12:30</div>
@@ -661,13 +661,13 @@ function chatApp() {
                     {
                         id: 4,
                         type: 'received',
-                        content: 'Terima kasih sudah menghubungi kami. Sampah akan segera dijemput dalam waktu 30 menit. <span class="message-time">00:10</span>',
+                        content: 'Terima kasih sudah menghubungi kami. Sampah segera dijemput dalam waktu 30 menit. <span class="message-time">00:10</span>',
                         timestamp: '00:10'
                     },
                     {
                         id: 5,
                         type: 'sent',
-                        content: 'Baik, saya tunggu. Lokasi sudah saya kirim di maps. <span class="message-time">00:11 <i class="fas fa-check-double status-read"></i></span>',
+                        content: 'Baik, saya meluncur. <span class="message-time">00:11 <i class="fas fa-check-double status-read"></i></span>',
                         timestamp: '00:11',
                         status: 'read'
                     }

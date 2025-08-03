@@ -16,6 +16,20 @@
     .sidebar-nav-item { transition: all 0.2s ease-in-out; border-radius: 8px; }
     .sidebar-nav-item:hover { background-color: rgba(255, 255, 255, 0.1); }
     .sidebar-nav-item.active { background-color: rgba(255, 255, 255, 0.2); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    
+    /* Memastikan teks sidebar konsisten */
+    .sidebar-nav-item span,
+    .sidebar-item-hover span {
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Memastikan tidak ada font-weight yang diwarisi */
+    .sidebar-nav-item,
+    .sidebar-item-hover {
+        font-weight: normal !important;
+    }
     .fixed-header {
         position: fixed; top: 0; left: 0; right: 0; height: 48px; z-index: 40;
         display: flex; align-items: center; justify-content: space-between; 
@@ -179,55 +193,55 @@
                 {{-- Dashboard Link --}}
                 <a href="/dashboard" class="flex items-center gap-3 p-3 font-medium sidebar-nav-item whitespace-nowrap w-full" :class="open ? (active === 'dashboard' ? 'active text-white' : 'text-white') : (active === 'dashboard' ? 'active text-white justify-center' : 'text-white justify-center')">
                     <i class="fas fa-home text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">BijakSampah</span>
+                    <span x-show="open" class="text-xs font-medium">Dashboard</span>
                 </a>
                 
                 {{-- Bank Sampah Link --}}
                 <a href="/bank-sampah" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'bank-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'bank-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-balance-scale text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Bank Sampah</span>
+                    <span x-show="open" class="text-xs font-medium">Bank Sampah</span>
                 </a>
                 
                 {{-- Toko Link --}}
                 <a href="/toko" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'toko' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'toko' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-store text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Toko</span>
+                    <span x-show="open" class="text-xs font-medium">Toko</span>
                 </a>
                 
                 {{-- Komunitas Link --}}
                 <a href="/komunitas" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'komunitas' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'komunitas' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-users text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Komunitas</span>
+                    <span x-show="open" class="text-xs font-medium">Komunitas</span>
                 </a>
                 
                 {{-- Berita Link --}}
                 <a href="/berita" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'berita' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'berita' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-newspaper text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Berita</span>
+                    <span x-show="open" class="text-xs font-medium">Berita</span>
                 </a>
                 
                 {{-- Keuangan Link --}}
                 <a href="/keuangan" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'keuangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'keuangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-file-invoice-dollar text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Keuangan</span>
+                    <span x-show="open" class="text-xs font-medium">Keuangan</span>
                 </a>
                 
                 {{-- Pesan Link --}}
                 <a href="/chat" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'chat' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'chat' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-comment-dots text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Pesan</span>
+                    <span x-show="open" class="text-xs font-medium">Pesan</span>
                 </a>
                 
                 {{-- Umpan Balik Link --}}
                 <a href="/feedback" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'feedback' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'feedback' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-info-circle text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Umpan Balik</span>
+                    <span x-show="open" class="text-xs font-medium">Umpan Balik</span>
                 </a>
                 
                 {{-- Settings Link --}}
                 <a href="/settings" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'settings' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'settings' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-cog text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Settings</span>
+                    <span x-show="open" class="text-xs font-medium" data-i18n="settings">Settings</span>
                 </a>
             </nav>
             
@@ -235,7 +249,7 @@
             <div class="w-full flex items-center py-3 mt-auto">
                 <a href="/logout" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover text-white hover:text-red-300 transition-all duration-200 w-full whitespace-nowrap" :class="open ? (active === 'logout' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'logout' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-sign-out-alt text-lg"></i>
-                    <span x-show="open" class="text-sm font-medium">Logout</span>
+                    <span x-show="open" class="text-xs font-medium">Logout</span>
                 </a>
             </div>
         </div>

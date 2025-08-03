@@ -15,13 +15,29 @@ Route::get('/kontakld', function () {
     return view('kontakld');
 })->name('kontakld');
 
+Route::get('/profil', function () {
+    return view('aboutbj');
+})->name('profil');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
+Route::get('/dashboard-banksampah', function () {
+    return view('dashboard-banksampah');
+})->name('dashboard-banksampah');
+
 Route::get('/notifikasi', function () {
     return view('notifikasi');
 })->name('notifikasi');
+
+Route::get('/notif-banksampah', function () {
+    return view('notif-banksampah');
+})->name('notif-banksampah');
+
+Route::get('/profile-banksampah', function () {
+    return view('profile-banksampah');
+})->name('profile-banksampah');
 
 Route::get('/bank-sampah', function () {
     return view('bank-sampah');
@@ -155,6 +171,63 @@ Route::get('/profile-nasabah', function () {
 Route::get('/penjemputan-sampah-banksampah', function () {
     return view('penjemputan-sampah-banksampah');
 })->name('penjemputan-sampah-banksampah');
+
+// Bank Sampah Management Routes
+Route::get('/nasabah', function () {
+    return view('nasabahdashboard');
+})->name('nasabah');
+
+Route::get('/nasabah-komunitas', function () {
+    return view('nasabahkomunitas');
+})->name('nasabah-komunitas');
+
+Route::get('/nasabah-register', function () {
+    return view('nasabahregister');
+})->name('nasabah-register');
+
+Route::get('/riwayat-transaksi-nasabah', function () {
+    return view('riwayattransaksinasabah');
+})->name('riwayat-transaksi-nasabah');
+
+Route::get('/verifikasi-nasabah', function () {
+    return view('verifikasi-nasabah');
+})->name('verifikasi-nasabah');
+
+Route::get('/data-nasabah', function () {
+    return view('data-nasabah-banksampah');
+})->name('data-nasabah');
+
+Route::get('/penjemputan-sampah', function () {
+    return view('penjemputan-sampah-banksampah');
+})->name('penjemputan-sampah');
+
+Route::get('/penimbangan', function () {
+    return view('dashboard-banksampah');
+})->name('penimbangan');
+
+Route::get('/input-setoran', function () {
+    return view('input-setoran');
+})->name('input-setoran');
+
+Route::get('/input-setoran1', function () {
+    return view('input-setoran1');
+})->name('input-setoran1');
+
+Route::get('/data-sampah', function () {
+    return view('data-sampah');
+})->name('data-sampah');
+
+Route::get('/penjualan-sampah', function () {
+    return view('penjualan-sampah');
+})->name('penjualan-sampah');
+
+Route::get('/input-penjualan-sampah', function () {
+    return view('inputpenjualansampah');
+})->name('input-penjualan-sampah');
+
+Route::get('/settings-banksampah', function () {
+    return view('settings-banksampah');
+})->name('settings-banksampah');
 
 // Admin Panel Routes
 Route::get('/admin/orders', function () {

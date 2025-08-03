@@ -52,8 +52,29 @@
         background: var(--sidebar-gradient) !important;
         transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .fab {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+    .fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
     
-    /* Dark theme overrides for penjemputan page */
+    /* Dark theme overrides for input setoran page */
     .dark .text-gray-900 { color: var(--text-primary) !important; }
     .dark .text-gray-600 { color: var(--text-secondary) !important; }
     .dark .text-gray-500 { color: var(--text-muted) !important; }
@@ -85,6 +106,18 @@
         font-weight: normal !important;
     }
 
+    /* Input button gradient */
+    .input-button {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        transition: all 0.3s ease;
+    }
+    
+    .input-button:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
     /* Notification badge */
     .notification-badge {
         background: white;
@@ -98,78 +131,12 @@
         font-size: 10px;
         font-weight: bold;
     }
-
-    /* Penjemputan specific styles */
-    .stat-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        border: 1px solid #e5e7eb;
-    }
-
-    .stat-card .icon {
-        font-size: 2rem;
-        color: #3b82f6;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-card .number {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.25rem;
-    }
-
-    .stat-card .label {
-        font-size: 0.875rem;
-        color: #6b7280;
-    }
-
-    .btn {
-        background: #3b82f6;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        cursor: pointer;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .btn:hover {
-        background: #2563eb;
-    }
-
-    .status {
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-    }
-
-    .status.pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .status.progress {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status.completed {
-        background: #d1fae5;
-        color: #065f46;
-    }
 </style>
 
-<div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="penjemputanApp()" x-init="init()">
+<div class="flex min-h-screen" style="background-color: var(--bg-secondary);" x-data="inputSetoranApp()" x-init="init()">
     {{-- Sidebar --}}
     <aside
-        x-data="{ open: false, active: 'penjemputan-sampah' }"
+        x-data="{ open: false, active: 'penimbangan' }"
         x-ref="sidebar"
         @mouseenter="open = true; $root.sidebarOpen = true"
         @mouseleave="open = false; $root.sidebarOpen = false"
@@ -196,7 +163,10 @@
                 <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'nasabah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'nasabah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'nasabah' ? '' : 'nasabah'">
                     <i class="fas fa-users text-lg"></i>
                     <span x-show="open" class="text-xs font-medium">Nasabah</span>
-                    <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'nasabah' ? 'rotate-180' : ''"></i>
+                    <div x-show="open" class="flex items-center gap-2 ml-auto">
+                        <div class="notification-badge">1</div>
+                        <i class="fas fa-chevron-down text-xs transition-transform" :class="active === 'nasabah' ? 'rotate-180' : ''"></i>
+                    </div>
                 </div>
                 
                 {{-- Sub-menu Nasabah --}}
@@ -212,13 +182,13 @@
                 </div>
                 
                 {{-- Penjemputan Sampah Link --}}
-                <a href="{{ route('penjemputan-sampah-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full active" :class="open ? (active === 'penjemputan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjemputan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
+                <a href="{{ route('penjemputan-sampah-banksampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'penjemputan-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penjemputan-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
                     <i class="fas fa-map-marker-alt text-lg"></i>
                     <span x-show="open" class="text-xs font-medium">Penjemputan Sampah</span>
                 </a>
                 
                 {{-- Penimbangan Section --}}
-                <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer" :class="open ? (active === 'penimbangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penimbangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'penimbangan' ? '' : 'penimbangan'">
+                <div class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full cursor-pointer active" :class="open ? (active === 'penimbangan' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'penimbangan' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')" @click="active = active === 'penimbangan' ? '' : 'penimbangan'">
                     <i class="fas fa-weight-hanging text-lg"></i>
                     <span x-show="open" class="text-xs font-medium">Penimbangan</span>
                     <i x-show="open" class="fas fa-chevron-down text-xs ml-auto transition-transform" :class="active === 'penimbangan' ? 'rotate-180' : ''"></i>
@@ -226,7 +196,7 @@
                 
                 {{-- Sub-menu Penimbangan --}}
                 <div x-show="open && active === 'penimbangan'" x-transition class="ml-4 space-y-1">
-                    <a href="{{ route('input-setoran1') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm" :class="active === 'input-setoran1' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
+                    <a href="{{ route('input-setoran') }}" class="flex items-center gap-3 p-2 rounded-lg sidebar-item-hover whitespace-nowrap w-full text-sm active" :class="active === 'input-setoran' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white'">
                         <i class="fas fa-plus text-sm"></i>
                         <span class="text-xs font-medium">Input Setoran</span>
                     </a>
@@ -234,8 +204,9 @@
                 
                 {{-- Data Sampah Link --}}
                 <a href="{{ route('data-sampah') }}" class="flex items-center gap-3 p-3 rounded-lg sidebar-item-hover whitespace-nowrap w-full" :class="open ? (active === 'data-sampah' ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/20 text-white') : (active === 'data-sampah' ? 'bg-white/20 text-white justify-center' : 'hover:bg-white/20 text-white justify-center')">
-                    <i class="fas fa-list text-lg"></i>
+                    <i class="fas fa-file-alt text-lg"></i>
                     <span x-show="open" class="text-xs font-medium">Data Sampah</span>
+                    <div x-show="open" class="notification-badge ml-auto">1</div>
                 </a>
                 
                 {{-- Penjualan Sampah Link --}}
@@ -267,7 +238,7 @@
         <div class="fixed-header" :style="'padding-left: 4rem;'">
             <div class="flex items-center gap-4">
                 <div>
-                    <h1 class="text-white font-semibold text-lg">Penjemputan Sampah</h1>
+                    <h1 class="text-white font-semibold text-lg">Penimbangan</h1>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -291,118 +262,133 @@
         <div class="p-8 w-full" style="padding-top: 60px;">
             {{-- Page Title --}}
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Penjemputan Sampah</h1>
-                <p class="text-gray-600 mt-2">Kelola permintaan penjemputan sampah dari nasabah</p>
+                <h1 class="text-3xl font-bold text-gray-900">Penimbangan</h1>
             </div>
 
-            {{-- Statistics --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-clock"></i></div>
-                    <div class="number">12</div>
-                    <div class="label">Menunggu Penjemputan</div>
+            {{-- Input Button --}}
+            <div class="mb-8">
+                <button class="input-button text-white px-8 py-4 rounded-lg text-lg font-semibold flex items-center gap-3" data-href="{{ route('input-setoran1') }}" onclick="window.location.href=this.getAttribute('data-href')">
+                    <i class="fas fa-plus text-white"></i>
+                    + Input Setoran Nasabah
+                </button>
+            </div>
+
+            {{-- Summary Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {{-- Telah Ditimbang --}}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-weight-hanging text-green-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Telah Ditimbang</h3>
+                            <div class="text-3xl font-bold text-green-600">2</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-truck"></i></div>
-                    <div class="number">8</div>
-                    <div class="label">Dalam Proses</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="number">45</div>
-                    <div class="label">Selesai Hari Ini</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-calendar"></i></div>
-                    <div class="number">156</div>
-                    <div class="label">Total Bulan Ini</div>
+
+                {{-- Belum Ditimbang --}}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-weight-hanging text-red-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Belum Ditimbang</h3>
+                            <div class="text-3xl font-bold text-red-600">1</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {{-- Pickup Requests Table --}}
+            {{-- Penjemputan Sampah Section --}}
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900">Daftar Permintaan Penjemputan</h3>
-                    <button class="btn">Tambah Penjemputan</button>
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Penjemputan Sampah</h3>
                 </div>
-                
+
+                {{-- Search and Sort Bar --}}
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-search text-gray-400"></i>
+                        <input type="text" placeholder="Search" class="border-none outline-none text-gray-600 placeholder-gray-400">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-600">Sort by:</span>
+                        <select class="border-none outline-none text-sm text-gray-600 bg-transparent">
+                            <option>Selesai</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Data Table --}}
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-200">
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">ID</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Nasabah</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Alamat</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Jenis Sampah</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Estimasi Berat</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Tanggal Request</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                                <th class="text-left py-3 px-4 font-semibold text-gray-700">Aksi</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Nama Nasabah</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">No Rumah-RT</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">ID Unit Bak Sampah</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">No Telepon</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Waktu</th>
+                                <th class="text-left py-3 px-4 font-medium text-gray-700">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ001</td>
-                                <td class="py-3 px-4">Ahmad Rizki</td>
-                                <td class="py-3 px-4">Jl. Sudirman No. 123, Jakarta</td>
-                                <td class="py-3 px-4">Plastik, Kertas</td>
-                                <td class="py-3 px-4">15 kg</td>
-                                <td class="py-3 px-4">2024-01-15</td>
-                                <td class="py-3 px-4"><span class="status pending">Menunggu</span></td>
+                                <td class="py-3 px-4">Jane Cooper</td>
+                                <td class="py-3 px-4">45-35</td>
+                                <td class="py-3 px-4">1/35/43</td>
+                                <td class="py-3 px-4">(+62) 888</td>
+                                <td class="py-3 px-4">Kemarin</td>
                                 <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Proses</button>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Selesai</span>
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ002</td>
-                                <td class="py-3 px-4">Siti Nurhaliza</td>
-                                <td class="py-3 px-4">Jl. Thamrin No. 45, Jakarta</td>
-                                <td class="py-3 px-4">Kardus, Botol</td>
-                                <td class="py-3 px-4">8 kg</td>
-                                <td class="py-3 px-4">2024-01-15</td>
-                                <td class="py-3 px-4"><span class="status progress">Dalam Proses</span></td>
+                                <td class="py-3 px-4">Floyd Miles</td>
+                                <td class="py-3 px-4">25-33</td>
+                                <td class="py-3 px-4">1/33/25</td>
+                                <td class="py-3 px-4">(+62) 888</td>
+                                <td class="py-3 px-4">30m yang lalu</td>
                                 <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Lacak</button>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Selesai</span>
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ003</td>
-                                <td class="py-3 px-4">Budi Santoso</td>
-                                <td class="py-3 px-4">Jl. Gatot Subroto No. 67, Jakarta</td>
-                                <td class="py-3 px-4">Plastik, Logam</td>
-                                <td class="py-3 px-4">22 kg</td>
-                                <td class="py-3 px-4">2024-01-14</td>
-                                <td class="py-3 px-4"><span class="status completed">Selesai</span></td>
+                                <td class="py-3 px-4">Ronald Richards</td>
+                                <td class="py-3 px-4">1-31</td>
+                                <td class="py-3 px-4">1/31/1</td>
+                                <td class="py-3 px-4">(+62) 888</td>
+                                <td class="py-3 px-4">1m yang lalu</td>
                                 <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Detail</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ004</td>
-                                <td class="py-3 px-4">Dewi Sartika</td>
-                                <td class="py-3 px-4">Jl. Asia Afrika No. 89, Jakarta</td>
-                                <td class="py-3 px-4">Kertas, Kaca</td>
-                                <td class="py-3 px-4">12 kg</td>
-                                <td class="py-3 px-4">2024-01-14</td>
-                                <td class="py-3 px-4"><span class="status pending">Menunggu</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Proses</button>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <td class="py-3 px-4">#PJ005</td>
-                                <td class="py-3 px-4">Rudi Hermawan</td>
-                                <td class="py-3 px-4">Jl. Sudirman No. 234, Jakarta</td>
-                                <td class="py-3 px-4">Plastik, Elektronik</td>
-                                <td class="py-3 px-4">18 kg</td>
-                                <td class="py-3 px-4">2024-01-13</td>
-                                <td class="py-3 px-4"><span class="status completed">Selesai</span></td>
-                                <td class="py-3 px-4">
-                                    <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Detail</button>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Selesai</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                {{-- Pagination --}}
+                <div class="flex items-center justify-between mt-6">
+                    <div class="text-sm text-gray-600">
+                        Showing data 1 to 8 of 256K entries
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-1 bg-blue-600 text-white rounded">1</button>
+                        <button class="px-3 py-1 text-gray-600 hover:text-gray-900">2</button>
+                        <button class="px-3 py-1 text-gray-600 hover:text-gray-900">3</button>
+                        <button class="px-3 py-1 text-gray-600 hover:text-gray-900">4</button>
+                        <span class="px-2 text-gray-600">...</span>
+                        <button class="px-3 py-1 text-gray-600 hover:text-gray-900">40</button>
+                        <button class="px-3 py-1 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -410,13 +396,14 @@
 </div>
 
 <script>
-function penjemputanApp() {
+function inputSetoranApp() {
     return {
         sidebarOpen: false,
         init() {
-            console.log('Penjemputan App initialized');
+            // Initialize the input setoran app
+            console.log('Input Setoran App initialized');
         }
     };
 }
 </script>
-@endsection
+@endsection 
