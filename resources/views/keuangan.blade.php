@@ -1,8 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+{{-- Lazy load Chart.js and XLSX --}}
+<script>
+// Lazy load Chart.js
+function loadChartJS() {
+    return new Promise((resolve) => {
+        if (window.Chart) {
+            resolve(window.Chart);
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.onload = () => resolve(window.Chart);
+        document.head.appendChild(script);
+    });
+}
+
+// Lazy load XLSX
+function loadXLSX() {
+    return new Promise((resolve) => {
+        if (window.XLSX) {
+            resolve(window.XLSX);
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+        script.onload = () => resolve(window.XLSX);
+        document.head.appendChild(script);
+    });
+}
+</script>
 <style>
     html, body {
         overflow-x: hidden;
@@ -11,19 +39,19 @@
         background: linear-gradient(135deg, #75E6DA 0%, #05445E 63%);
     }
     .sidebar-hover {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: width 0.2s ease;
     }
     .sidebar-item-hover {
-        transition: all 0.2s ease-in-out;
+        transition: background-color 0.1s ease;
     }
     .sidebar-item-hover:hover {
         background-color: rgba(255, 255, 255, 0.2);
     }
     .sidebar-logo {
-        transition: all 0.3s ease-in-out;
+        transition: opacity 0.2s ease;
     }
     .sidebar-nav-item {
-        transition: all 0.2s ease-in-out;
+        transition: background-color 0.1s ease;
         border-radius: 8px;
     }
     .sidebar-nav-item:hover {
@@ -31,7 +59,6 @@
     }
     .sidebar-nav-item.active {
         background-color: rgba(255, 255, 255, 0.2);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .fixed-header {
         position: fixed;
@@ -45,59 +72,38 @@
         justify-content: space-between;
         padding-right: 1.5rem;
         background: linear-gradient(135deg, #75E6DA 0%, #05445E 63%);
-        transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: padding-left 0.2s ease;
     }
     .chart-bar { 
-        transition: all 0.3s ease; 
         position: relative;
     }
     .chart-bar:hover { 
-        transform: scaleY(1.05); 
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .chart-bar::after {
-        content: attr(data-value);
-        position: absolute;
-        top: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255,255,255,0.9);
-        color: #333;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 10px;
-        font-weight: bold;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    .chart-bar:hover::after {
-        opacity: 1;
+        transform: scaleY(1.02); 
     }
     .progress-ring {
         transform: rotate(-90deg);
     }
     .progress-ring-circle {
-        transition: stroke-dasharray 0.35s;
+        transition: stroke-dasharray 0.2s;
         transform-origin: 50% 50%;
     }
     .stat-card {
-        transition: all 0.3s ease;
+        transition: transform 0.2s ease;
     }
     .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transform: translateY(-1px);
     }
     .gradient-bg {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #667eea;
     }
     .gradient-bg-green {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: #4facfe;
     }
     .gradient-bg-orange {
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        background: #fa709a;
     }
     .gradient-bg-purple {
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        background: #a8edea;
     }
 </style>
 
@@ -110,7 +116,7 @@
         @mouseleave="open = false; $root.sidebarOpen = false"
         class="fixed top-0 left-0 z-20 flex flex-col py-6 sidebar-hover overflow-hidden shadow-2xl group sidebar-gradient"
         :class="open ? 'w-64' : 'w-16'"
-        style="transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 48px; height: calc(100vh - 48px);"
+        style="transition: width 0.2s ease; margin-top: 48px; height: calc(100vh - 48px);"
     >
         <div class="relative flex flex-col h-full w-full px-4">
             {{-- Logo Section --}}
@@ -187,9 +193,9 @@
     </aside>
 
     {{-- Main Content Area --}}
-    <div class="flex-1 min-h-screen" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.3s cubic-bezier(0.4,0,0.2,1);'">
+    <div class="flex-1 min-h-screen" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.2s ease;'">
         {{-- Top Header Bar --}}
-        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + ';'">
+        <div class="fixed-header" :style="'padding-left:' + (sidebarOpen ? '16rem' : '4rem') + '; transition: padding-left 0.2s ease;'">
             <h1 class="text-white font-semibold text-lg">BijakSampah</h1>
             <div class="flex items-center gap-4">
                 <a href="{{ route('notifikasi') }}" class="relative">
@@ -391,7 +397,7 @@
                         <div class="flex relative">
                             <!-- Active Background Slider -->
                             <div 
-                                class="absolute top-1 bottom-1 rounded-xl transition-all duration-300 ease-in-out"
+                                class="absolute top-1 bottom-1 rounded-xl transition-all duration-200 ease-in-out"
                                 :class="activeTab === 'pemasukan' ? 'bg-green-500' : 'bg-red-500'"
                                 :style="activeTab === 'pemasukan' ? 'transform: translateX(0); width: 8rem;' : 'transform: translateX(8rem); width: 8rem;'">
                             </div>
@@ -399,7 +405,7 @@
                             <!-- Pemasukan Button -->
                             <button 
                                 @click="activeTab = 'pemasukan'" 
-                                class="relative px-8 py-3 rounded-xl font-medium text-lg transition-all duration-300 z-10 min-w-[8rem]"
+                                class="relative px-8 py-3 rounded-xl font-medium text-lg transition-all duration-200 z-10 min-w-[8rem]"
                                 :class="activeTab === 'pemasukan' ? 'text-white' : 'text-gray-600 hover:text-gray-800'">
                                 <i class="fas fa-arrow-up mr-2"></i>Pemasukan
                             </button>
@@ -407,7 +413,7 @@
                             <!-- Pengeluaran Button -->
                             <button 
                                 @click="activeTab = 'pengeluaran'" 
-                                class="relative px-8 py-3 rounded-xl font-medium text-lg transition-all duration-300 z-10 min-w-[8rem]"
+                                class="relative px-8 py-3 rounded-xl font-medium text-lg transition-all duration-200 z-10 min-w-[8rem]"
                                 :class="activeTab === 'pengeluaran' ? 'text-white' : 'text-gray-600 hover:text-gray-800'">
                                 <i class="fas fa-arrow-down mr-2"></i>Pengeluaran
                             </button>
@@ -423,10 +429,10 @@
                             <div class="text-gray-700 text-lg font-medium" x-text="activeTab === 'pemasukan' ? 'Cek riwayat pemasukan dari Top Up BSPay dan Toko!' : 'Cek riwayat pengeluaran untuk beli sampah!'"></div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <button onclick="exportToExcel()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium shadow-lg">
+                            <button onclick="exportToExcel()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-lg">
                                 <i class="fas fa-download mr-2"></i>Export Excel
                             </button>
-                            <button onclick="showFilterModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-lg">
+                            <button onclick="showFilterModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium shadow-lg">
                                 <i class="fas fa-filter mr-2"></i>Filter
                             </button>
                         </div>
@@ -449,8 +455,8 @@
                             <tbody>
                                 <!-- Pemasukan Data -->
                                 <template x-if="activeTab === 'pemasukan'">
-                                    @for ($i = 0; $i < 8; $i++)
-                                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                                    @for ($i = 0; $i < 5; $i++)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-100">
                                         <td class="px-4 py-3 font-medium text-gray-900">1#TOP{{ $i+3 }}</td>
                                         <td class="px-4 py-3 font-medium text-gray-900">16/06/25</td>
                                         <td class="px-4 py-3 font-medium text-gray-900">{{ $i % 2 == 0 ? 'BSPay' : 'Toko BijakSampah' }}</td>
@@ -469,13 +475,13 @@
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-3">
-                                                <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800 transition-all duration-300 hover:scale-110" title="Lihat Detail">
+                                                <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800" title="Lihat Detail">
                                                     <i class="fas fa-eye text-lg"></i>
                                                 </button>
-                                                <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800 transition-all duration-300 hover:scale-110" title="Download Invoice">
+                                                <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800" title="Download Invoice">
                                                     <i class="fas fa-download text-lg"></i>
                                                 </button>
-                                                <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800 transition-all duration-300 hover:scale-110" title="Menu">
+                                                <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800" title="Menu">
                                                     <i class="fas fa-ellipsis-v text-lg"></i>
                                                 </button>
                                             </div>
@@ -486,8 +492,8 @@
                                 
                                 <!-- Pengeluaran Data -->
                                 <template x-if="activeTab === 'pengeluaran'">
-                                    @for ($i = 0; $i < 8; $i++)
-                                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                                    @for ($i = 0; $i < 5; $i++)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-100">
                                         <td class="px-4 py-3 font-medium text-gray-900">1#BELI{{ $i+3 }}</td>
                                         <td class="px-4 py-3 font-medium text-gray-900">16/06/25</td>
                                         <td class="px-4 py-3 font-medium text-gray-900">{{ $i % 2 == 0 ? 'Wugis' : 'BS' }}</td>
@@ -506,13 +512,13 @@
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-3">
-                                                <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800 transition-all duration-300 hover:scale-110" title="Lihat Detail">
+                                                <button onclick="viewTransaction('{{ $i+3 }}')" class="text-blue-600 hover:text-blue-800" title="Lihat Detail">
                                                     <i class="fas fa-eye text-lg"></i>
                                                 </button>
-                                                <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800 transition-all duration-300 hover:scale-110" title="Download Invoice">
+                                                <button onclick="downloadInvoice('{{ $i+3 }}')" class="text-green-600 hover:text-green-800" title="Download Invoice">
                                                     <i class="fas fa-download text-lg"></i>
                                                 </button>
-                                                <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800 transition-all duration-300 hover:scale-110" title="Menu">
+                                                <button onclick="showTransactionMenu('{{ $i+3 }}')" class="text-purple-600 hover:text-purple-800" title="Menu">
                                                     <i class="fas fa-ellipsis-v text-lg"></i>
                                                 </button>
                                             </div>
@@ -525,14 +531,14 @@
                     </div>
                     <div class="flex items-center justify-between mt-6">
                         <div class="text-gray-700 text-lg font-medium">
-                            Menampilkan 1-8 dari 24 transaksi
+                            Menampilkan 1-5 dari 24 transaksi
                         </div>
                         <div class="flex items-center gap-3">
-                            <button onclick="previousPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-300 font-medium border-2 border-gray-300">
+                            <button onclick="previousPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium border-2 border-gray-300">
                                 <i class="fas fa-chevron-left mr-2"></i>Sebelumnya
                             </button>
                             <span class="text-gray-900 px-4 py-2 font-medium text-lg bg-blue-100 rounded-lg border-2 border-blue-300">1</span>
-                            <button onclick="nextPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-300 font-medium border-2 border-gray-300">
+                            <button onclick="nextPage()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium border-2 border-gray-300">
                                 Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
                             </button>
                         </div>
@@ -548,18 +554,18 @@
      <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-2xl">
          <div class="flex items-center justify-between mb-6">
              <h3 class="text-xl font-bold text-gray-900">Filter Transaksi</h3>
-             <button onclick="hideFilterModal()" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+             <button onclick="hideFilterModal()" class="text-gray-500 hover:text-gray-700">
                  <i class="fas fa-times text-lg"></i>
              </button>
          </div>
          <div class="space-y-6">
              <div>
                  <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-                 <input type="date" id="filterTanggal" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-200">
+                 <input type="date" id="filterTanggal" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none">
              </div>
              <div>
                  <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                 <select id="filterKategori" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-200">
+                 <select id="filterKategori" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none">
                      <option value="">Semua Kategori</option>
                      <option value="Top Up">Top Up</option>
                      <option value="Toko">Toko</option>
@@ -570,7 +576,7 @@
              </div>
              <div>
                  <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                 <select id="filterStatus" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors duration-200">
+                 <select id="filterStatus" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none">
                      <option value="">Semua Status</option>
                      <option value="Selesai">Selesai</option>
                      <option value="Pending">Pending</option>
@@ -578,10 +584,10 @@
                  </select>
              </div>
              <div class="flex gap-3 pt-4">
-                 <button onclick="applyFilter()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium">
+                 <button onclick="applyFilter()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors duration-200 font-medium">
                      Terapkan Filter
                  </button>
-                 <button onclick="resetFilter()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-all duration-200 font-medium">
+                 <button onclick="resetFilter()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-colors duration-200 font-medium">
                      Reset
                  </button>
              </div>
@@ -591,10 +597,10 @@
 
  <!-- Transaction Detail Modal -->
  <div id="transactionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-     <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-2xl transform transition-all duration-300">
+     <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-2xl">
          <div class="flex items-center justify-between mb-6">
              <h3 class="text-xl font-bold text-gray-900">Detail Transaksi</h3>
-             <button onclick="hideTransactionModal()" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+             <button onclick="hideTransactionModal()" class="text-gray-500 hover:text-gray-700">
                  <i class="fas fa-times text-lg"></i>
              </button>
          </div>
@@ -602,7 +608,7 @@
              <!-- Transaction details will be populated here -->
          </div>
          <div class="mt-6 flex justify-end">
-             <button onclick="hideTransactionModal()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all duration-200 font-medium">
+             <button onclick="hideTransactionModal()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium">
                  Tutup
              </button>
          </div>
@@ -610,80 +616,125 @@
  </div>
 
  <script>
- // Simple Charts - No complex operations
+ // Lazy load charts when needed
+ let chartsLoaded = false;
+ 
+ function loadCharts() {
+     if (chartsLoaded) return;
+     
+     loadChartJS().then(() => {
+         try {
+             // Simple Bar Chart
+             const barCtx = document.getElementById('barChart');
+             if (barCtx) {
+                 new Chart(barCtx.getContext('2d'), {
+                     type: 'bar',
+                     data: {
+                         labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                         datasets: [{
+                             label: 'Pemasukan',
+                             data: [15000, 22000, 18000, 25000, 30000, 35000, 40000],
+                             backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                         }]
+                     },
+                     options: {
+                         responsive: true,
+                         maintainAspectRatio: false,
+                         plugins: { legend: { display: false } },
+                         animation: { duration: 1000 }
+                     }
+                 });
+             }
+
+             // Simple Doughnut Chart
+             const doughnutCtx = document.getElementById('doughnutChart');
+             if (doughnutCtx) {
+                 new Chart(doughnutCtx.getContext('2d'), {
+                     type: 'doughnut',
+                     data: {
+                         labels: ['Organik', 'Anorganik', 'B3'],
+                         datasets: [{
+                             data: [70, 20, 10],
+                             backgroundColor: ['#10b981', '#3b82f6', '#f59e0b']
+                         }]
+                     },
+                     options: {
+                         responsive: true,
+                         maintainAspectRatio: false,
+                         plugins: { legend: { display: false } },
+                         animation: { duration: 1000 }
+                     }
+                 });
+             }
+
+             // Simple Line Chart
+             const lineCtx = document.getElementById('lineChart');
+             if (lineCtx) {
+                 new Chart(lineCtx.getContext('2d'), {
+                     type: 'line',
+                     data: {
+                         labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                         datasets: [{
+                             label: 'Pemasukan',
+                             data: [15000, 22000, 18000, 25000, 30000, 35000, 40000, 45000, 50000, 55000],
+                             borderColor: '#10b981',
+                             backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                             fill: true
+                         }]
+                     },
+                     options: {
+                         responsive: true,
+                         maintainAspectRatio: false,
+                         plugins: { legend: { display: true } },
+                         animation: { duration: 1000 }
+                     }
+                 });
+             }
+             chartsLoaded = true;
+         } catch (error) {
+             console.error('Chart error:', error);
+         }
+     });
+ }
+ 
+ // Load charts when user scrolls to them
  document.addEventListener('DOMContentLoaded', function() {
-     try {
-         // Simple Bar Chart
-         const barCtx = document.getElementById('barChart');
-         if (barCtx) {
-             new Chart(barCtx.getContext('2d'), {
-                 type: 'bar',
-                 data: {
-                     labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-                     datasets: [{
-                         label: 'Pemasukan',
-                         data: [15000, 22000, 18000, 25000, 30000, 35000, 40000],
-                         backgroundColor: 'rgba(59, 130, 246, 0.8)'
-                     }]
-                 },
-                 options: {
-                     responsive: true,
-                     maintainAspectRatio: false,
-                     plugins: { legend: { display: false } }
-                 }
-             });
-         }
-
-         // Simple Doughnut Chart
-         const doughnutCtx = document.getElementById('doughnutChart');
-         if (doughnutCtx) {
-             new Chart(doughnutCtx.getContext('2d'), {
-                 type: 'doughnut',
-                 data: {
-                     labels: ['Organik', 'Anorganik', 'B3'],
-                     datasets: [{
-                         data: [70, 20, 10],
-                         backgroundColor: ['#10b981', '#3b82f6', '#f59e0b']
-                     }]
-                 },
-                 options: {
-                     responsive: true,
-                     maintainAspectRatio: false,
-                     plugins: { legend: { display: false } }
-                 }
-             });
-         }
-
-         // Simple Line Chart
-         const lineCtx = document.getElementById('lineChart');
-         if (lineCtx) {
-             new Chart(lineCtx.getContext('2d'), {
-                 type: 'line',
-                 data: {
-                     labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                     datasets: [{
-                         label: 'Pemasukan',
-                         data: [15000, 22000, 18000, 25000, 30000, 35000, 40000, 45000, 50000, 55000],
-                         borderColor: '#10b981',
-                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                         fill: true
-                     }]
-                 },
-                 options: {
-                     responsive: true,
-                     maintainAspectRatio: false,
-                     plugins: { legend: { display: true } }
-                 }
-             });
-         }
-     } catch (error) {
-         console.error('Chart error:', error);
+     const observer = new IntersectionObserver((entries) => {
+         entries.forEach(entry => {
+             if (entry.isIntersecting) {
+                 loadCharts();
+                 observer.disconnect();
+             }
+         });
+     });
+     
+     const chartSection = document.querySelector('.grid.grid-cols-1.lg\\:grid-cols-2');
+     if (chartSection) {
+         observer.observe(chartSection);
      }
+     
+     // Event delegation for better performance
+     document.addEventListener('click', function(e) {
+         if (e.target.matches('[onclick*="viewTransaction"]')) {
+             e.preventDefault();
+             const id = e.target.getAttribute('onclick').match(/\d+/)[0];
+             viewTransaction(id);
+         }
+     });
  });
 
  // Function implementations
- function exportToExcel() {
+ async function exportToExcel() {
      try {
+         // Show loading state
+         const button = event.target;
+         const originalText = button.innerHTML;
+         button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+         button.disabled = true;
+         
+         // Load XLSX library
+         const XLSX = await loadXLSX();
+         
          // Create workbook and worksheet
          const workbook = XLSX.utils.book_new();
          
@@ -696,10 +747,7 @@
              ['1#TOP4', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '60,000', '60', 'Selesai'],
              ['1#TOP5', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '70,000', '70', 'Selesai'],
              ['1#TOP6', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '80,000', '80', 'Selesai'],
-             ['1#TOP7', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '90,000', '90', 'Selesai'],
-             ['1#TOP8', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '100,000', '100', 'Selesai'],
-             ['1#TOP9', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '110,000', '110', 'Selesai'],
-             ['1#TOP10', '16/06/25', 'Toko BijakSampah', 'Penjualan Produk', 'Toko', '120,000', '120', 'Selesai']
+             ['1#TOP7', '16/06/25', 'BSPay', 'Top Up Point', 'Top Up', '90,000', '90', 'Selesai']
          ];
          
          const worksheet = XLSX.utils.aoa_to_sheet(data);
@@ -712,6 +760,11 @@
      } catch (error) {
          console.error('Export error:', error);
          alert('Error saat export data');
+     } finally {
+         // Restore button state
+         const button = event.target;
+         button.innerHTML = originalText;
+         button.disabled = false;
      }
  }
 
@@ -723,40 +776,61 @@
      document.getElementById('filterModal').classList.add('hidden');
  }
 
+ // Debounce function for performance
+ function debounce(func, wait) {
+     let timeout;
+     return function executedFunction(...args) {
+         const later = () => {
+             clearTimeout(timeout);
+             func(...args);
+         };
+         clearTimeout(timeout);
+         timeout = setTimeout(later, wait);
+     };
+ }
+
  function applyFilter() {
      const tanggal = document.getElementById('filterTanggal').value;
      const kategori = document.getElementById('filterKategori').value;
      const status = document.getElementById('filterStatus').value;
      
-     console.log('Filter applied:', { tanggal, kategori, status });
-     
-     // Simulate filtering
-     const rows = document.querySelectorAll('tbody tr');
-     rows.forEach(row => {
-         let show = true;
+     // Use requestAnimationFrame for smooth filtering
+     requestAnimationFrame(() => {
+         const rows = document.querySelectorAll('tbody tr');
+         let visibleCount = 0;
          
-         // Filter by date (if selected)
-         if (tanggal) {
-             const rowDate = row.querySelector('td:nth-child(2)').textContent;
-             if (rowDate !== tanggal) show = false;
+         rows.forEach(row => {
+             let show = true;
+             
+             // Filter by date (if selected)
+             if (tanggal) {
+                 const rowDate = row.querySelector('td:nth-child(2)').textContent;
+                 if (rowDate !== tanggal) show = false;
+             }
+             
+             // Filter by category (if selected)
+             if (kategori && show) {
+                 const rowCategory = row.querySelector('td:nth-child(5) span').textContent;
+                 if (rowCategory !== kategori) show = false;
+             }
+             
+             // Filter by status (if selected)
+             if (status && show) {
+                 const rowStatus = row.querySelector('td:nth-child(8) span').textContent;
+                 if (rowStatus !== status) show = false;
+             }
+             
+             row.style.display = show ? '' : 'none';
+             if (show) visibleCount++;
+         });
+         
+         // Update pagination info
+         const paginationInfo = document.querySelector('.text-gray-700.text-lg.font-medium');
+         if (paginationInfo) {
+             paginationInfo.textContent = `Menampilkan ${visibleCount} dari ${rows.length} transaksi`;
          }
-         
-         // Filter by category (if selected)
-         if (kategori && show) {
-             const rowCategory = row.querySelector('td:nth-child(5) span').textContent;
-             if (rowCategory !== kategori) show = false;
-         }
-         
-         // Filter by status (if selected)
-         if (status && show) {
-             const rowStatus = row.querySelector('td:nth-child(8) span').textContent;
-             if (rowStatus !== status) show = false;
-         }
-         
-         row.style.display = show ? '' : 'none';
      });
      
-     alert('Filter berhasil diterapkan!');
      hideFilterModal();
  }
 
@@ -776,11 +850,20 @@
      hideFilterModal();
  }
 
+ // Cache for transaction details
+ const transactionCache = new Map();
+ 
  function viewTransaction(id) {
-     console.log('viewTransaction called with ID:', id);
+     // Check cache first
+     if (transactionCache.has(id)) {
+         showTransactionModal(transactionCache.get(id));
+         return;
+     }
      
-     // Simple approach - just use default
-     let currentTab = 'pemasukan';
+     // Get current tab
+     const currentTab = document.querySelector('[x-data]').__x.$data.activeTab || 'pemasukan';
+     
+     // Prepare transaction data
      let details = {};
      
      if (currentTab === 'pemasukan') {
@@ -789,10 +872,7 @@
              '4': { invoice: '1#TOP4', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp60.000', point: '60', status: 'Selesai' },
              '5': { invoice: '1#TOP5', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp70.000', point: '70', status: 'Selesai' },
              '6': { invoice: '1#TOP6', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp80.000', point: '80', status: 'Selesai' },
-             '7': { invoice: '1#TOP7', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp90.000', point: '90', status: 'Selesai' },
-             '8': { invoice: '1#TOP8', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp100.000', point: '100', status: 'Selesai' },
-             '9': { invoice: '1#TOP9', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp110.000', point: '110', status: 'Selesai' },
-             '10': { invoice: '1#TOP10', date: '16/06/25', source: 'Toko BijakSampah', type: 'Penjualan Produk', amount: 'Rp120.000', point: '120', status: 'Selesai' }
+             '7': { invoice: '1#TOP7', date: '16/06/25', source: 'BSPay', type: 'Top Up Point', amount: 'Rp90.000', point: '90', status: 'Selesai' }
          };
      } else {
          details = {
@@ -800,61 +880,61 @@
              '4': { invoice: '1#BELI4', date: '16/06/25', buyer: 'BS', type: 'Sampah Anorganik', amount: 'Rp15.000', point: '15', status: 'Selesai' },
              '5': { invoice: '1#BELI5', date: '16/06/25', buyer: 'Wugis', type: 'Sampah B3', amount: 'Rp20.000', point: '20', status: 'Selesai' },
              '6': { invoice: '1#BELI6', date: '16/06/25', buyer: 'BS', type: 'Sampah Organik', amount: 'Rp25.000', point: '25', status: 'Selesai' },
-             '7': { invoice: '1#BELI7', date: '16/06/25', buyer: 'Wugis', type: 'Sampah Anorganik', amount: 'Rp30.000', point: '30', status: 'Selesai' },
-             '8': { invoice: '1#BELI8', date: '16/06/25', buyer: 'BS', type: 'Sampah B3', amount: 'Rp35.000', point: '35', status: 'Selesai' },
-             '9': { invoice: '1#BELI9', date: '16/06/25', buyer: 'Wugis', type: 'Sampah Organik', amount: 'Rp40.000', point: '40', status: 'Selesai' },
-             '10': { invoice: '1#BELI10', date: '16/06/25', buyer: 'BS', type: 'Sampah Anorganik', amount: 'Rp45.000', point: '45', status: 'Selesai' }
+             '7': { invoice: '1#BELI7', date: '16/06/25', buyer: 'Wugis', type: 'Sampah Anorganik', amount: 'Rp30.000', point: '30', status: 'Selesai' }
          };
      }
      
      const transaction = details[id];
      if (transaction) {
-         const label1 = currentTab === 'pemasukan' ? 'Sumber' : 'Pembeli';
-         const label2 = currentTab === 'pemasukan' ? 'Jenis Transaksi' : 'Jenis Sampah';
-         const value1 = currentTab === 'pemasukan' ? transaction.source : transaction.buyer;
-         const value2 = currentTab === 'pemasukan' ? transaction.type : transaction.type;
-         
-         const modal = document.getElementById('transactionModal');
-         const detailsElement = document.getElementById('transactionDetails');
-         
-         if (modal && detailsElement) {
-             detailsElement.innerHTML = `
-                 <div class="space-y-3">
-                     <div class="flex justify-between">
-                         <span class="font-medium text-gray-700">No. Invoice:</span>
-                         <span class="font-semibold">${transaction.invoice}</span>
-                     </div>
-                     <div class="flex justify-between">
-                         <span class="font-medium text-gray-700">Tanggal:</span>
-                         <span class="font-semibold">${transaction.date}</span>
-                     </div>
-                     <div class="flex justify-between">
-                         <span class="font-medium text-gray-700">${label1}:</span>
-                         <span class="font-semibold">${value1}</span>
-                     </div>
-                     <div class="flex justify-between">
-                         <span class="font-medium text-gray-700">${label2}:</span>
-                         <span class="font-semibold">${value2}</span>
-                     </div>
-                     <div class="flex justify-between">
-                         <span class="font-medium text-gray-700">Jumlah:</span>
-                         <span class="font-semibold text-green-600">${transaction.amount} (${transaction.point} Koin)</span>
-                     </div>
-                     <div class="flex justify-between">
-                         <span class="font-medium text-gray-700">Status:</span>
-                         <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">${transaction.status}</span>
-                     </div>
-                 </div>
-             `;
-             modal.classList.remove('hidden');
-             console.log('Modal opened successfully');
-         } else {
-             console.error('Modal elements not found');
-             alert('Error: Modal tidak ditemukan');
-         }
+         // Cache the transaction data
+         transactionCache.set(id, { transaction, currentTab });
+         showTransactionModal({ transaction, currentTab });
      } else {
-         console.error('Transaction not found for ID:', id, 'Current tab:', currentTab);
          alert('Error: Transaksi tidak ditemukan');
+     }
+ }
+ 
+ function showTransactionModal({ transaction, currentTab }) {
+     const label1 = currentTab === 'pemasukan' ? 'Sumber' : 'Pembeli';
+     const label2 = currentTab === 'pemasukan' ? 'Jenis Transaksi' : 'Jenis Sampah';
+     const value1 = currentTab === 'pemasukan' ? transaction.source : transaction.buyer;
+     const value2 = currentTab === 'pemasukan' ? transaction.type : transaction.type;
+     
+     const modal = document.getElementById('transactionModal');
+     const detailsElement = document.getElementById('transactionDetails');
+     
+     if (modal && detailsElement) {
+         detailsElement.innerHTML = `
+             <div class="space-y-3">
+                 <div class="flex justify-between">
+                     <span class="font-medium text-gray-700">No. Invoice:</span>
+                     <span class="font-semibold">${transaction.invoice}</span>
+                 </div>
+                 <div class="flex justify-between">
+                     <span class="font-medium text-gray-700">Tanggal:</span>
+                     <span class="font-semibold">${transaction.date}</span>
+                 </div>
+                 <div class="flex justify-between">
+                     <span class="font-medium text-gray-700">${label1}:</span>
+                     <span class="font-semibold">${value1}</span>
+                 </div>
+                 <div class="flex justify-between">
+                     <span class="font-medium text-gray-700">${label2}:</span>
+                     <span class="font-semibold">${value2}</span>
+                 </div>
+                 <div class="flex justify-between">
+                     <span class="font-medium text-gray-700">Jumlah:</span>
+                     <span class="font-semibold text-green-600">${transaction.amount} (${transaction.point} Koin)</span>
+                 </div>
+                 <div class="flex justify-between">
+                     <span class="font-medium text-gray-700">Status:</span>
+                     <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">${transaction.status}</span>
+                 </div>
+             </div>
+         `;
+         modal.classList.remove('hidden');
+     } else {
+         alert('Error: Modal tidak ditemukan');
      }
  }
 
@@ -863,8 +943,18 @@
  }
 
  function downloadInvoice(id) {
-     alert(`Mengunduh invoice ${id}...`);
-     // Implement actual download functionality
+     // Show loading state
+     const button = event.target;
+     const originalText = button.innerHTML;
+     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+     button.disabled = true;
+     
+     // Simulate download delay
+     setTimeout(() => {
+         alert(`Mengunduh invoice ${id}...`);
+         button.innerHTML = originalText;
+         button.disabled = false;
+     }, 500);
  }
 
  function showTransactionMenu(id) {

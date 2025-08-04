@@ -1068,117 +1068,189 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
   <script>
-    $(document).ready(function () {
-      // [Previous JavaScript code remains the same until the action button click handler...]
-
-      // Aksi tombol di tabel dengan popup detail
-      $(document).on('click', '.action-btn', function() {
-        const row = $(this).closest('tr');
-        const date = row.find('td:nth-child(2)').text();
-        const category = row.find('td:nth-child(3)').text().trim();
-        const weight = row.find('td:nth-child(4)').text();
-        const points = row.find('td:nth-child(5)').text();
+    // Load libraries immediately for better performance
+    let librariesLoaded = false;
+    
+    async function loadLibraries() {
+        if (librariesLoaded) return;
         
-        // Extract category name (remove icon)
-        const categoryName = category.replace(/<[^>]*>/g, '').trim();
-        
-        // Get category icon
-        const categoryIcon = $(row.find('td:nth-child(3) i')).attr('class');
-        
-        // Calculate points per kg
-        const weightValue = parseFloat(weight);
-        const pointsValue = parseInt(points.replace(/\./g, ''));
-        const pointsPerKg = (pointsValue / weightValue).toFixed(0);
-        
-        // Format modal content
-        const modalContent = `
-          <div class="detail-row">
-            <div class="detail-icon"><i class="${categoryIcon}"></i></div>
-            <div style="flex:1">
-              <div class="detail-category">
-                <div style="font-weight:600;color:#05445E;font-size:18px">${categoryName}</div>
-              </div>
-              <div style="font-size:14px;color:#666">${date}</div>
-            </div>
-          </div>
-          
-          <div class="detail-points">
-            ${points} Koin
-            <small>${weight} × ${pointsPerKg} koin/kg</small>
-          </div>
-          
-          <div class="detail-row">
-            <div class="detail-label">Status</div>
-            <div class="detail-value"><span style="display:inline-block;padding:4px 10px;background:#e3f9e5;color:#1a7a2e;border-radius:20px;font-size:13px;font-weight:500"><i class="fas fa-check-circle"></i> Selesai</span></div>
-          </div>
-          
-          <div class="detail-row">
-            <div class="detail-label">Waktu Transaksi</div>
-            <div class="detail-value">${getRandomTime()}</div>
-          </div>
-          
-          <div class="detail-row">
-            <div class="detail-label">Lokasi</div>
-            <div class="detail-value">Bank Sampah ${getRandomLocation()}</div>
-          </div>
-          
-          <div class="detail-row">
-            <div class="detail-label">ID Transaksi</div>
-            <div class="detail-value">BS-${Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
-          </div>
-        `;
-        
-        // Insert content and show modal
-        $('#modalBody').html(modalContent);
-        $('#detailModal').addClass('active');
-        
-        // Add animation class
-        setTimeout(() => {
-          $('.modal-container').addClass('animated');
-        }, 10);
-      });
-
-      // Function to generate random time
-      function getRandomTime() {
-        const hours = Math.floor(Math.random() * 12) + 8; // Between 8-19
-        const minutes = Math.floor(Math.random() * 60);
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} WIB`;
-      }
-
-      // Function to generate random location
-      function getRandomLocation() {
-        const locations = [
-          "Sudirman", 
-          "Thamrin", 
-          "Kebayoran", 
-          "Pondok Indah", 
-          "Grogol", 
-          "Cipete", 
-          "Kemang"
-        ];
-        return locations[Math.floor(Math.random() * locations.length)];
-      }
-
-      // Close modal
-      $('#modalClose, #modalBtnClose').click(function() {
-        $('#detailModal').removeClass('active');
-      });
-
-      // Close modal when clicking outside
-      $('#detailModal').click(function(e) {
-        if ($(e.target).hasClass('modal-overlay')) {
-          $(this).removeClass('active');
+        try {
+            // Load jQuery
+            if (!window.jQuery) {
+                await loadScript('https://code.jquery.com/jquery-3.7.1.min.js');
+            }
+            
+            // Load DataTables
+            if (!window.DataTable) {
+                await loadScript('https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js');
+            }
+            
+            // Load Flatpickr
+            if (!window.flatpickr) {
+                await loadScript('https://cdn.jsdelivr.net/npm/flatpickr');
+                await loadScript('https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js');
+            }
+            
+            librariesLoaded = true;
+            initializeDataTable();
+        } catch (error) {
+            console.error('Error loading libraries:', error);
+            // Fallback: load libraries synchronously
+            loadLibrariesSync();
         }
-      });
-
-      // [Rest of the previous JavaScript code remains the same...]
+    }
+    
+    function loadLibrariesSync() {
+        // Load libraries synchronously as fallback
+        const scripts = [
+            'https://code.jquery.com/jquery-3.7.1.min.js',
+            'https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js',
+            'https://cdn.jsdelivr.net/npm/flatpickr',
+            'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js'
+        ];
+        
+        scripts.forEach(src => {
+            const script = document.createElement('script');
+            script.src = src;
+            document.head.appendChild(script);
+        });
+        
+        // Initialize after a short delay
+        setTimeout(() => {
+            librariesLoaded = true;
+            initializeDataTable();
+        }, 1000);
+    }
+    
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+    
+    // Load libraries immediately when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load libraries immediately instead of waiting for scroll
+        loadLibraries();
     });
-  </script>
+    
+    function initializeDataTable() {
+        // Check if jQuery is available
+        if (typeof $ === 'undefined') {
+            console.error('jQuery not loaded');
+            return;
+        }
+        
+        // [Previous JavaScript code remains the same until the action button click handler...]
+
+        // Aksi tombol di tabel dengan popup detail
+        $(document).on('click', '.action-btn', function() {
+            const row = $(this).closest('tr');
+            const date = row.find('td:nth-child(2)').text();
+            const category = row.find('td:nth-child(3)').text().trim();
+            const weight = row.find('td:nth-child(4)').text();
+            const points = row.find('td:nth-child(5)').text();
+            
+            // Extract category name (remove icon)
+            const categoryName = category.replace(/<[^>]*>/g, '').trim();
+            
+            // Get category icon
+            const categoryIcon = $(row.find('td:nth-child(3) i')).attr('class');
+            
+            // Calculate points per kg
+            const weightValue = parseFloat(weight);
+            const pointsValue = parseInt(points.replace(/\./g, ''));
+            const pointsPerKg = (pointsValue / weightValue).toFixed(0);
+            
+            // Format modal content
+            const modalContent = `
+              <div class="detail-row">
+                <div class="detail-icon"><i class="${categoryIcon}"></i></div>
+                <div style="flex:1">
+                  <div class="detail-category">
+                    <div style="font-weight:600;color:#05445E;font-size:18px">${categoryName}</div>
+                  </div>
+                  <div style="font-size:14px;color:#666">${date}</div>
+                </div>
+              </div>
+              
+              <div class="detail-points">
+                ${points} Koin
+                <small>${weight} × ${pointsPerKg} koin/kg</small>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-label">Status</div>
+                <div class="detail-value"><span style="display:inline-block;padding:4px 10px;background:#e3f9e5;color:#1a7a2e;border-radius:20px;font-size:13px;font-weight:500"><i class="fas fa-check-circle"></i> Selesai</span></div>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-label">Waktu Transaksi</div>
+                <div class="detail-value">${getRandomTime()}</div>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-label">Lokasi</div>
+                <div class="detail-value">Bank Sampah ${getRandomLocation()}</div>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-label">ID Transaksi</div>
+                <div class="detail-value">BS-${Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
+              </div>
+            `;
+            
+            // Insert content and show modal
+            $('#modalBody').html(modalContent);
+            $('#detailModal').addClass('active');
+            
+            // Add animation class
+            setTimeout(() => {
+              $('.modal-container').addClass('animated');
+            }, 10);
+        });
+
+        // Function to generate random time
+        function getRandomTime() {
+          const hours = Math.floor(Math.random() * 12) + 8; // Between 8-19
+          const minutes = Math.floor(Math.random() * 60);
+          return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} WIB`;
+        }
+
+        // Function to generate random location
+        function getRandomLocation() {
+          const locations = [
+            "Sudirman", 
+            "Thamrin", 
+            "Kebayoran", 
+            "Pondok Indah", 
+            "Grogol", 
+            "Cipete", 
+            "Kemang"
+          ];
+          return locations[Math.floor(Math.random() * locations.length)];
+        }
+
+        // Close modal
+        $('#modalClose, #modalBtnClose').click(function() {
+          $('#detailModal').removeClass('active');
+        });
+
+        // Close modal when clicking outside
+        $('#detailModal').click(function(e) {
+          if ($(e.target).hasClass('modal-overlay')) {
+            $(this).removeClass('active');
+          }
+        });
+
+        // [Rest of the previous JavaScript code remains the same...]
+    }
+    </script>
 
 
         <div class="footer">

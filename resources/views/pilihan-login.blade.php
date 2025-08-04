@@ -650,400 +650,472 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-    
+    <!-- Firebase SDK - Load Immediately -->
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAJhkCyNT0be2x6FSzyUz0Ye9xX-QihIBo",
-            authDomain: "bijaksampah-aeb82.firebaseapp.com",
-            databaseURL: "https://bijaksampah-aeb82-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "bijaksampah-aeb82",
-            storageBucket: "bijaksampah-aeb82.appspot.com",
-            messagingSenderId: "140467230562",
-            appId: "1:140467230562:web:19a34dfefcb6f65bd7fe3b"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
-
-        // DOM Elements
-        const loginTab = document.getElementById('loginTab');
-        const registerTab = document.getElementById('registerTab');
-        const descriptionText = document.getElementById('descriptionText');
-        const roleSelection = document.getElementById('roleSelection');
-        const roleButtons = document.querySelectorAll('.role-btn');
-        const lanjutButton = document.getElementById('lanjutButton');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const backButton = document.getElementById('backButton');
-        const forgotPasswordLink = document.getElementById('forgotPassword');
-        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-        const closeModalBtn = document.getElementById('closeModal');
-        const loginSubmitBtn = document.getElementById('loginSubmit');
-        const registerSubmitBtn = document.getElementById('registerSubmit');
-        const resetPasswordBtn = document.getElementById('resetPasswordBtn');
-        const resetEmail = document.getElementById('resetEmail');
-        const changePasswordForm = document.getElementById('changePasswordForm');
-        const passwordInfoText = document.getElementById('passwordInfoText');
-
-        // Password toggle elements
-        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
-        const loginPasswordInput = document.getElementById('loginPassword');
-        const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
-        const registerPasswordInput = document.getElementById('registerPassword');
-        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-        const confirmPasswordInput = document.getElementById('registerConfirmPassword');
-
-        // State variables
-        let activeTab = 'login';
-        let selectedRole = null;
-
-        // Initialize the page
-        function init() {
-            showRoleSelection();
-            loginTab.classList.add('active');
+        // Load Firebase immediately for better performance
+        let firebaseLoaded = false;
+        
+        async function loadFirebase() {
+            if (firebaseLoaded) return;
             
-            // Check if user was remembered
-            if (localStorage.getItem('rememberMe') === 'true') {
-                const rememberedEmail = localStorage.getItem('email');
-                if (rememberedEmail) {
-                    document.getElementById('loginEmail').value = rememberedEmail;
-                    document.getElementById('rememberMe').checked = true;
+            try {
+                // Load Firebase App
+                if (!window.firebase) {
+                    await loadScript('https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js');
                 }
+                
+                // Load Firebase Auth
+                if (!window.firebase?.auth) {
+                    await loadScript('https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js');
+                }
+                
+                // Load Firebase Database
+                if (!window.firebase?.database) {
+                    await loadScript('https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js');
+                }
+                
+                firebaseLoaded = true;
+                initializeFirebase();
+            } catch (error) {
+                console.error('Error loading Firebase:', error);
+                // Fallback: load Firebase synchronously
+                loadFirebaseSync();
             }
         }
-
-        // --- View Management Functions ---
-        function showRoleSelection() {
-            descriptionText.style.display = 'block';
-            roleSelection.style.display = 'grid';
-            lanjutButton.style.display = 'block';
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'none';
-            backButton.style.display = 'none';
-        }
-
-        function showLoginFormContent() {
-            descriptionText.style.display = 'none';
-            roleSelection.style.display = 'none';
-            lanjutButton.style.display = 'none';
-            loginForm.style.display = 'flex';
-            registerForm.style.display = 'none';
-            backButton.style.display = 'block';
-        }
-
-        function showRegisterFormContent() {
-            descriptionText.style.display = 'none';
-            roleSelection.style.display = 'none';
-            lanjutButton.style.display = 'none';
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'flex';
-            backButton.style.display = 'block';
-        }
-
-        // --- Event Handlers ---
-        // Tab switching
-        loginTab.addEventListener('click', () => {
-            activeTab = 'login';
-            loginTab.classList.add('active');
-            registerTab.classList.remove('active');
-            resetRoleSelection();
-            showRoleSelection();
-        });
-
-        registerTab.addEventListener('click', () => {
-            activeTab = 'register';
-            registerTab.classList.add('active');
-            loginTab.classList.remove('active');
-            resetRoleSelection();
-            showRoleSelection();
-        });
-
-        // Role selection
-        roleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                roleButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
-                selectedRole = button.dataset.role;
-                lanjutButton.disabled = false;
+        
+        function loadFirebaseSync() {
+            // Load Firebase synchronously as fallback
+            const scripts = [
+                'https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js',
+                'https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js',
+                'https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js'
+            ];
+            
+            scripts.forEach(src => {
+                const script = document.createElement('script');
+                script.src = src;
+                document.head.appendChild(script);
             });
+            
+            // Initialize after a short delay
+            setTimeout(() => {
+                firebaseLoaded = true;
+                initializeFirebase();
+            }, 1000);
+        }
+        
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Load Firebase immediately when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load Firebase immediately instead of waiting for user interaction
+            loadFirebase();
         });
+        
+        function initializeFirebase() {
+            // Check if Firebase is available
+            if (typeof firebase === 'undefined') {
+                console.error('Firebase not loaded');
+                return;
+            }
+            
+            // Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyAJhkCyNT0be2x6FSzyUz0Ye9xX-QihIBo",
+                authDomain: "bijaksampah-aeb82.firebaseapp.com",
+                databaseURL: "https://bijaksampah-aeb82-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "bijaksampah-aeb82",
+                storageBucket: "bijaksampah-aeb82.appspot.com",
+                messagingSenderId: "140467230562",
+                appId: "1:140467230562:web:19a34dfefcb6f65bd7fe3b"
+            };
 
-        // Continue button
-        lanjutButton.addEventListener('click', () => {
-            if (selectedRole) {
-                if (activeTab === 'login') {
-                    showLoginFormContent();
-                } else {
-                    showRegisterFormContent();
+            // Initialize Firebase
+            const app = firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const database = firebase.database();
+
+            // DOM Elements
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const descriptionText = document.getElementById('descriptionText');
+            const roleSelection = document.getElementById('roleSelection');
+            const roleButtons = document.querySelectorAll('.role-btn');
+            const lanjutButton = document.getElementById('lanjutButton');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const backButton = document.getElementById('backButton');
+            const forgotPasswordLink = document.getElementById('forgotPassword');
+            const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const loginSubmitBtn = document.getElementById('loginSubmit');
+            const registerSubmitBtn = document.getElementById('registerSubmit');
+            const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+            const resetEmail = document.getElementById('resetEmail');
+            const changePasswordForm = document.getElementById('changePasswordForm');
+            const passwordInfoText = document.getElementById('passwordInfoText');
+
+            // Password toggle elements
+            const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+            const loginPasswordInput = document.getElementById('loginPassword');
+            const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
+            const registerPasswordInput = document.getElementById('registerPassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPasswordInput = document.getElementById('registerConfirmPassword');
+
+            // State variables
+            let activeTab = 'login';
+            let selectedRole = null;
+
+            // Initialize the page
+            function init() {
+                showRoleSelection();
+                loginTab.classList.add('active');
+                
+                // Check if user was remembered
+                if (localStorage.getItem('rememberMe') === 'true') {
+                    const rememberedEmail = localStorage.getItem('email');
+                    if (rememberedEmail) {
+                        document.getElementById('loginEmail').value = rememberedEmail;
+                        document.getElementById('rememberMe').checked = true;
+                    }
                 }
             }
-        });
 
-        // Back button
-        backButton.addEventListener('click', () => {
-            showRoleSelection();
-        });
-
-        // Password toggle
-        toggleLoginPassword.addEventListener('click', function() {
-            const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            loginPasswordInput.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
-
-        toggleRegisterPassword.addEventListener('click', function() {
-            const type = registerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            registerPasswordInput.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
-
-        toggleConfirmPassword.addEventListener('click', function() {
-            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            confirmPasswordInput.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
-
-        // Forgot password
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            forgotPasswordModal.style.display = 'flex';
-            changePasswordForm.style.display = 'flex';
-        });
-
-        closeModalBtn.addEventListener('click', () => {
-            forgotPasswordModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === forgotPasswordModal) {
-                forgotPasswordModal.style.display = 'none';
+            // --- View Management Functions ---
+            function showRoleSelection() {
+                descriptionText.style.display = 'block';
+                roleSelection.style.display = 'grid';
+                lanjutButton.style.display = 'block';
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'none';
+                backButton.style.display = 'none';
             }
-        });
 
-        // Form submissions
-        loginSubmitBtn.addEventListener('click', loginUser);
-        registerSubmitBtn.addEventListener('click', registerUser);
-        resetPasswordBtn.addEventListener('click', sendPasswordReset);
-
-        // --- Helper Functions ---
-        function resetRoleSelection() {
-            selectedRole = null;
-            roleButtons.forEach(btn => btn.classList.remove('selected'));
-            lanjutButton.disabled = true;
-        }
-
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(String(email).toLowerCase());
-        }
-
-        // --- Firebase Functions ---
-        function loginUser() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Validate email
-            if (!validateEmail(email)) {
-                alert("Masukkan email yang valid");
-                return;
+            function showLoginFormContent() {
+                descriptionText.style.display = 'none';
+                roleSelection.style.display = 'none';
+                lanjutButton.style.display = 'none';
+                loginForm.style.display = 'flex';
+                registerForm.style.display = 'none';
+                backButton.style.display = 'block';
             }
-            
-            // Validate password
-            if (password.length < 6) {
-                alert("Password harus minimal 6 karakter");
-                return;
+
+            function showRegisterFormContent() {
+                descriptionText.style.display = 'none';
+                roleSelection.style.display = 'none';
+                lanjutButton.style.display = 'none';
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'flex';
+                backButton.style.display = 'block';
             }
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Success
-                    const user = userCredential.user;
-                    
-                    // Store remember me preference
-                    if (rememberMe) {
-                        localStorage.setItem('rememberMe', 'true');
-                        localStorage.setItem('email', email);
+
+            // --- Event Handlers ---
+            // Tab switching
+            loginTab.addEventListener('click', () => {
+                activeTab = 'login';
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                resetRoleSelection();
+                showRoleSelection();
+            });
+
+            registerTab.addEventListener('click', () => {
+                activeTab = 'register';
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                resetRoleSelection();
+                showRoleSelection();
+            });
+
+            // Role selection
+            roleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    roleButtons.forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                    selectedRole = button.dataset.role;
+                    lanjutButton.disabled = false;
+                });
+            });
+
+            // Continue button
+            lanjutButton.addEventListener('click', () => {
+                if (selectedRole) {
+                    if (activeTab === 'login') {
+                        showLoginFormContent();
                     } else {
-                        localStorage.removeItem('rememberMe');
-                        localStorage.removeItem('email');
+                        showRegisterFormContent();
                     }
-                    
-                    // Get user role from database
-                    database.ref('users verification/' + user.uid).once('value')
-                        .then((snapshot) => {
-                            const userData = snapshot.val();
-                            const userRole = userData ? userData.role : null;
-                            
-                            // Redirect based on role
-                            redirectBasedOnRole(user.uid, userRole);
-                        })
-                        .catch((error) => {
-                            console.error("Error getting user data:", error);
-                            redirectBasedOnRole(user.uid, null);
-                        });
-                })
-                .catch((error) => {
-                    let errorMessage = "Login gagal: ";
-                    switch(error.code) {
-                        case "auth/invalid-email":
-                            errorMessage += "Email tidak valid";
-                            break;
-                        case "auth/user-disabled":
-                            errorMessage += "Akun ini dinonaktifkan";
-                            break;
-                        case "auth/user-not-found":
-                            errorMessage += "Tidak ada pengguna dengan email ini";
-                            break;
-                        case "auth/wrong-password":
-                            errorMessage += "Password salah";
-                            break;
-                        default:
-                            errorMessage += error.message;
-                    }
-                    alert(errorMessage);
-                });
-        }
+                }
+            });
 
-        function registerUser() {
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
-            
-            // Validate email
-            if (!validateEmail(email)) {
-                alert("Masukkan email yang valid");
-                return;
-            }
-            
-            // Validate password
-            if (password.length < 6) {
-                alert("Password harus minimal 6 karakter");
-                return;
-            }
-            
-            // Check if passwords match
-            if (password !== confirmPassword) {
-                alert("Password dan konfirmasi password tidak cocok");
-                return;
-            }
-            
-            // Check if role is selected
-            if (!selectedRole) {
-                alert("Silakan pilih peran Anda terlebih dahulu");
-                return;
-            }
-            
-            // Create user with email and password
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Success
-                    const user = userCredential.user;
-                    
-                    // Save additional user data to Realtime Database
-                    const userData = {
-                        email: email,
-                        role: selectedRole,
-                        password: password, // Storing password in plain text is not recommended in production
-                        createdAt: firebase.database.ServerValue.TIMESTAMP
-                    };
-                    
-                    return database.ref('users verification/' + user.uid).set(userData);
-                })
-                .then(() => {
-                    alert("Registrasi berhasil!");
-                    // Redirect based on role
-                    redirectBasedOnRole(auth.currentUser.uid, selectedRole);
-                })
-                .catch((error) => {
-                    let errorMessage = "Registrasi gagal: ";
-                    switch(error.code) {
-                        case "auth/email-already-in-use":
-                            errorMessage += "Email sudah digunakan";
-                            break;
-                        case "auth/invalid-email":
-                            errorMessage += "Email tidak valid";
-                            break;
-                        case "auth/weak-password":
-                            errorMessage += "Password terlalu lemah";
-                            break;
-                        default:
-                            errorMessage += error.message;
-                    }
-                    alert(errorMessage);
-                });
-        }
+            // Back button
+            backButton.addEventListener('click', () => {
+                showRoleSelection();
+            });
 
-        function sendPasswordReset() {
-            const email = resetEmail.value;
-            
-            if (!validateEmail(email)) {
-                alert("Masukkan email yang valid");
-                return;
-            }
-            
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    passwordInfoText.textContent = "Link reset password telah dikirim ke email Anda. Silakan cek inbox Anda.";
-                    changePasswordForm.style.display = 'none';
-                })
-                .catch((error) => {
-                    let errorMessage = "Gagal mengirim link reset password: ";
-                    switch(error.code) {
-                        case "auth/invalid-email":
-                            errorMessage += "Email tidak valid";
-                            break;
-                        case "auth/user-not-found":
-                            errorMessage += "Tidak ada pengguna dengan email ini";
-                            break;
-                        default:
-                            errorMessage += error.message;
-                    }
-                    alert(errorMessage);
-                });
-        }
+            // Password toggle
+            toggleLoginPassword.addEventListener('click', function() {
+                const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                loginPasswordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
 
-        function redirectBasedOnRole(userId, role) {
-            // Use the role parameter instead of selectedRole for more reliability
-            let redirectUrl;
-            
-            switch(role) {
-                case "Nasabah":
-                    redirectUrl = "nasabah.html";
-                    break;
-                case "UMKM":
-                    redirectUrl = "umkm.html";
-                    break;
-                case "Non Nasabah":
-                    redirectUrl = "non-nasabah.html";
-                    break;
-                case "Bank Sampah":
-                    redirectUrl = "bank-sampah.html";
-                    break;
-                default:
-                    redirectUrl = "dashboard.html";
-            }
-            
-            // Save user session
-            sessionStorage.setItem('currentUser', userId);
-            sessionStorage.setItem('userRole', role);
-            
-            // Redirect
-            window.location.href = redirectUrl;
-        }
+            toggleRegisterPassword.addEventListener('click', function() {
+                const type = registerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                registerPasswordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
 
-        // Initialize the application
-        init();
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // Forgot password
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                forgotPasswordModal.style.display = 'flex';
+                changePasswordForm.style.display = 'flex';
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                forgotPasswordModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === forgotPasswordModal) {
+                    forgotPasswordModal.style.display = 'none';
+                }
+            });
+
+            // Form submissions
+            loginSubmitBtn.addEventListener('click', loginUser);
+            registerSubmitBtn.addEventListener('click', registerUser);
+            resetPasswordBtn.addEventListener('click', sendPasswordReset);
+
+            // --- Helper Functions ---
+            function resetRoleSelection() {
+                selectedRole = null;
+                roleButtons.forEach(btn => btn.classList.remove('selected'));
+                lanjutButton.disabled = true;
+            }
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            // --- Firebase Functions ---
+            function loginUser() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+                
+                // Validate email
+                if (!validateEmail(email)) {
+                    alert("Masukkan email yang valid");
+                    return;
+                }
+                
+                // Validate password
+                if (password.length < 6) {
+                    alert("Password harus minimal 6 karakter");
+                    return;
+                }
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Success
+                        const user = userCredential.user;
+                        
+                        // Store remember me preference
+                        if (rememberMe) {
+                            localStorage.setItem('rememberMe', 'true');
+                            localStorage.setItem('email', email);
+                        } else {
+                            localStorage.removeItem('rememberMe');
+                            localStorage.removeItem('email');
+                        }
+                        
+                        // Get user role from database
+                        database.ref('users verification/' + user.uid).once('value')
+                            .then((snapshot) => {
+                                const userData = snapshot.val();
+                                const userRole = userData ? userData.role : null;
+                                
+                                // Redirect based on role
+                                redirectBasedOnRole(user.uid, userRole);
+                            })
+                            .catch((error) => {
+                                console.error("Error getting user data:", error);
+                                redirectBasedOnRole(user.uid, null);
+                            });
+                    })
+                    .catch((error) => {
+                        let errorMessage = "Login gagal: ";
+                        switch(error.code) {
+                            case "auth/invalid-email":
+                                errorMessage += "Email tidak valid";
+                                break;
+                            case "auth/user-disabled":
+                                errorMessage += "Akun ini dinonaktifkan";
+                                break;
+                            case "auth/user-not-found":
+                                errorMessage += "Tidak ada pengguna dengan email ini";
+                                break;
+                            case "auth/wrong-password":
+                                errorMessage += "Password salah";
+                                break;
+                            default:
+                                errorMessage += error.message;
+                        }
+                        alert(errorMessage);
+                    });
+            }
+
+            function registerUser() {
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('registerConfirmPassword').value;
+                
+                // Validate email
+                if (!validateEmail(email)) {
+                    alert("Masukkan email yang valid");
+                    return;
+                }
+                
+                // Validate password
+                if (password.length < 6) {
+                    alert("Password harus minimal 6 karakter");
+                    return;
+                }
+                
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    alert("Password dan konfirmasi password tidak cocok");
+                    return;
+                }
+                
+                // Check if role is selected
+                if (!selectedRole) {
+                    alert("Silakan pilih peran Anda terlebih dahulu");
+                    return;
+                }
+                
+                // Create user with email and password
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Success
+                        const user = userCredential.user;
+                        
+                        // Save additional user data to Realtime Database
+                        const userData = {
+                            email: email,
+                            role: selectedRole,
+                            password: password, // Storing password in plain text is not recommended in production
+                            createdAt: firebase.database.ServerValue.TIMESTAMP
+                        };
+                        
+                        return database.ref('users verification/' + user.uid).set(userData);
+                    })
+                    .then(() => {
+                        alert("Registrasi berhasil!");
+                        // Redirect based on role
+                        redirectBasedOnRole(auth.currentUser.uid, selectedRole);
+                    })
+                    .catch((error) => {
+                        let errorMessage = "Registrasi gagal: ";
+                        switch(error.code) {
+                            case "auth/email-already-in-use":
+                                errorMessage += "Email sudah digunakan";
+                                break;
+                            case "auth/invalid-email":
+                                errorMessage += "Email tidak valid";
+                                break;
+                            case "auth/weak-password":
+                                errorMessage += "Password terlalu lemah";
+                                break;
+                            default:
+                                errorMessage += error.message;
+                        }
+                        alert(errorMessage);
+                    });
+            }
+
+            function sendPasswordReset() {
+                const email = resetEmail.value;
+                
+                if (!validateEmail(email)) {
+                    alert("Masukkan email yang valid");
+                    return;
+                }
+                
+                auth.sendPasswordResetEmail(email)
+                    .then(() => {
+                        passwordInfoText.textContent = "Link reset password telah dikirim ke email Anda. Silakan cek inbox Anda.";
+                        changePasswordForm.style.display = 'none';
+                    })
+                    .catch((error) => {
+                        let errorMessage = "Gagal mengirim link reset password: ";
+                        switch(error.code) {
+                            case "auth/invalid-email":
+                                errorMessage += "Email tidak valid";
+                                break;
+                            case "auth/user-not-found":
+                                errorMessage += "Tidak ada pengguna dengan email ini";
+                                break;
+                            default:
+                                errorMessage += error.message;
+                        }
+                        alert(errorMessage);
+                    });
+            }
+
+            function redirectBasedOnRole(userId, role) {
+                // Use the role parameter instead of selectedRole for more reliability
+                let redirectUrl;
+                
+                switch(role) {
+                    case "Nasabah":
+                        redirectUrl = "nasabah.html";
+                        break;
+                    case "UMKM":
+                        redirectUrl = "umkm.html";
+                        break;
+                    case "Non Nasabah":
+                        redirectUrl = "non-nasabah.html";
+                        break;
+                    case "Bank Sampah":
+                        redirectUrl = "bank-sampah.html";
+                        break;
+                    default:
+                        redirectUrl = "dashboard.html";
+                }
+                
+                // Save user session
+                sessionStorage.setItem('currentUser', userId);
+                sessionStorage.setItem('userRole', role);
+                
+                // Redirect
+                window.location.href = redirectUrl;
+            }
+
+            // Initialize the application
+            init();
+        }
     </script>
 </body>
 </html>
